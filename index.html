@@ -4272,7 +4272,9 @@ function mapaVendedores(){
   return m;
 }
 function timeDe(r){ const v = S._mapa && S._mapa.get(codKey(r[14])); return v ? v.time : ''; }
-function naDre(r){ return S._timesN.has(norm(timeDe(r))); }
+// vendas com Vlr contrato zerado não entram na DRE
+function contratoZerado(r){ return Math.abs(+r[5] || 0) < 0.005; }
+function naDre(r){ return !contratoZerado(r) && S._timesN.has(norm(timeDe(r))); }
 function recompute(){
   if (!S.dirty) return S.res;
   S._mapa = mapaVendedores(); S._timesN = new Set(timesSel().map(norm));
@@ -4598,7 +4600,7 @@ function viewBD(){
     </div>
     <div class="muted small">${fmt0.format(f.length)} vendas · contrato ${money2(tot.c)} · quitado ${money2(tot.q)} · cancelado ${money2(tot.x)}</div>
     <div class="tbl-wrap"><table><thead><tr><th>Cód. venda</th><th style="text-align:left">des_email</th><th style="text-align:left">nme_plano</th><th style="text-align:left">cod_oferta</th><th style="text-align:left">nme_oferta</th><th style="text-align:left">Data</th><th style="text-align:left">Produto</th><th style="text-align:left">Status</th><th style="text-align:left">cod_vendedor</th><th style="text-align:left">Vendedor</th><th style="text-align:left">Time</th><th style="text-align:left">DRE</th><th>Vlr contrato</th><th>Vlr quitado</th><th>Vlr receber</th><th>Vlr cancelado</th></tr></thead><tbody>
-    ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[14])}</td><td>${esc(r[15])}</td><td>${esc(timeDe(r)) || '<span class="muted">sem cadastro</span>'}</td><td>${naDre(r) ? '<span class="pill">Sim</span>' : '<span class="pill warn">Fora</span>'}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="17" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
+    ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[14])}</td><td>${esc(r[15])}</td><td>${esc(timeDe(r)) || '<span class="muted">sem cadastro</span>'}</td><td>${naDre(r) ? '<span class="pill">Sim</span>' : `<span class="pill warn">${contratoZerado(r) ? 'Fora · contrato zerado' : 'Fora · time'}</span>`}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="17" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
     </tbody></table></div>
     <div class="pager"><button class="btn" data-act="bdprev" ${S.bdPage===0?'disabled':''}>Anterior</button><span>Página ${S.bdPage+1} de ${pages}</span><button class="btn" data-act="bdnext" ${S.bdPage>=pages-1?'disabled':''}>Próxima</button></div>
   </div></div>`;
@@ -4697,7 +4699,7 @@ function viewVend(){
     <div class="stats"><div class="stat"><b>${fmt0.format(S.bdDreN || 0)}</b><span>vendas na DRE</span></div>
     <div class="stat"><b>${fmt0.format(S.bd.length - (S.bdDreN || 0))}</b><span>vendas fora da DRE</span></div>
     <div class="stat"><b>${fmt0.format(lista.length)}</b><span>vendedores cadastrados</span></div></div></div>
-  <p class="muted" style="margin:0;max-width:85ch">A DRE considera só as vendas cujo <b>cod_vendedor</b> pertence a um dos times marcados abaixo. O time de cada vendedor vem da base de vendedores${S.vend.length ? '' : ' — como ela ainda não foi enviada, está sendo usada a coluna Time que veio na base de vendas'}.</p>
+  <p class="muted" style="margin:0;max-width:85ch">A DRE considera só as vendas com <b>Vlr contrato</b> diferente de zero e cujo <b>cod_vendedor</b> pertence a um dos times marcados abaixo (${fmt0.format(S.bd.filter(contratoZerado).length)} vendas com contrato zerado ficam fora). O time de cada vendedor vem da base de vendedores${S.vend.length ? '' : ' — como ela ainda não foi enviada, está sendo usada a coluna Time que veio na base de vendas'}.</p>
   <div class="panel stack" style="gap:10px">
     <h3 style="margin:0">Times considerados na DRE</h3>
     <div class="row">${times.map(t => `<label class="row small" style="gap:6px"><input type="checkbox" data-time="${esc(t)}" ${sel.has(norm(t))?'checked':''} ${S.canWrite?'':'disabled'}> ${esc(t)}</label>`).join('')}</div>
@@ -4737,7 +4739,7 @@ function prepVend(sheets){
   const cont = new Map(); for (const r of S.bd) { const k = codKey(r[14]); cont.set(k, (cont.get(k)||0) + 1); }
   const pt = new Map(); for (const v of rows) { const o = pt.get(v[2]) || [v[2], 0, 0]; o[1]++; o[2] += cont.get(v[0]) || 0; pt.set(v[2], o); }
   let nDre = 0, semCad = 0;
-  for (const r of S.bd) { const t = mapa.get(codKey(r[14])); if (t == null) semCad++; else if (S._timesN.has(norm(t))) nDre++; }
+  for (const r of S.bd) { const t = mapa.get(codKey(r[14])); if (t == null) semCad++; else if (!contratoZerado(r) && S._timesN.has(norm(t))) nDre++; }
   u.prev = { colTime: c.sh.aoa[c.i][iT], rows, dup, semTime: rows.filter(v => !v[2]).length, porTime: [...pt.values()].sort((a,b) => b[2]-a[2]), nDre, semCad };
 }
 async function aplicarVend(){
