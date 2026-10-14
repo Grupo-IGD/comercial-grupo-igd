@@ -470,6 +470,150 @@
   .quad-table tr.subtotal-row td { font-weight: 700; background: #fbf3ea; border-top: 1px solid #f0c9a6; }
   .quad-table tr.total-row td:first-child { border-radius: 0 0 0 8px; }
   .quad-table tr.total-row td:last-child { border-radius: 0 0 8px 0; }
+
+  /* ===== Módulos: Comissão Diretor Comercial / DRE Comercial ===== */
+  .mod-tabs { display:flex; gap:4px; background:#1a1a1a; border-radius:10px; padding:4px; margin:0 0 18px; width:max-content; max-width:100%; flex-wrap:wrap; }
+  .mod-btn { border:none; background:none; padding:9px 22px; border-radius:7px; font-weight:700; font-size:13.5px; color:#d9d6cc; cursor:pointer; letter-spacing:.02em; }
+  .mod-btn:hover { color:#fff; }
+  .mod-btn.active { background:#ED7D31; color:#fff; }
+</style>
+<style>
+/* ===== DRE Comercial ===== */
+#dreApp{
+  --bg:#f5f4f0; --surface:#ffffff; --ink:#1a1a1a; --muted:#78766f; --line:#e5e3da; --band:#fbf3ea;
+  --accent:#ED7D31; --accent-ink:#ffffff; --accent-soft:#fdeee1; --neg:#b3261e; --warn:#8a6d00; --warn-soft:#fff8e1; --ok:#1e6b34;
+  --f-ui:Arial,"Segoe UI",sans-serif; --f-cond:Arial,"Segoe UI",sans-serif; --r:10px;
+  color:var(--ink); font-family:var(--f-ui); font-size:13px; line-height:1.45;
+}
+#dreApp [hidden]{display:none!important}
+#dreApp table{border-collapse:separate;border-spacing:0;width:100%;min-width:0}
+#dreApp tbody tr:nth-child(even){background:none}
+#dreApp tbody tr:hover{background:#fef2e9}
+#dreApp .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 6px}
+#dreApp .brand h1{margin:0}
+#dreApp .brand .sub{color:var(--muted);font-size:12.5px}
+#dreApp .brand .status{margin-left:auto;font-size:12px;color:var(--muted)}
+#dreApp nav.tabs{border-bottom:1px solid var(--line);margin-bottom:18px}
+#dreApp nav.tabs button{font-weight:700;font-size:13px}
+#dreApp nav.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+#dreApp .dre td.cell:hover{outline-color:var(--accent)}
+#dreApp .toast{position:fixed}
+#dreApp .dre thead th.tot{background:#c9601c;color:#fff}
+#dreApp *{box-sizing:border-box}
+#dreApp .brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding-block:14px 6px}
+#dreApp .brand h1{font-family:var(--f-cond);font-weight:600;font-size:20px;margin:0;letter-spacing:.01em}
+#dreApp .brand .sub{color:var(--muted);font-size:13px}
+#dreApp .brand .status{margin-left:auto;font-size:12px;color:var(--muted)}
+#dreApp nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+#dreApp nav.tabs::-webkit-scrollbar{display:none}
+#dreApp nav.tabs button{font:500 13px var(--f-ui);color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:9px 12px;white-space:nowrap;cursor:pointer}
+#dreApp nav.tabs button:hover{color:var(--ink)}
+#dreApp nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+#dreApp nav.tabs .sep{width:1px;background:var(--line);margin:8px 6px}
+#dreApp h2{font-family:var(--f-cond);font-weight:600;font-size:18px;margin:0}
+#dreApp h3{font-family:var(--f-cond);font-weight:600;font-size:15px;margin:0 0 8px}
+#dreApp .muted{color:var(--muted)}
+#dreApp .small{font-size:12px}
+#dreApp .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#dreApp .spacer{flex:1}
+#dreApp .stack{display:flex;flex-direction:column;gap:16px}
+#dreApp .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+#dreApp .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+#dreApp .chips{display:flex;gap:4px;flex-wrap:wrap}
+#dreApp .chip{font:500 12px var(--f-ui);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 10px;border-radius:999px;cursor:pointer}
+#dreApp .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#dreApp button.btn{font:600 13px var(--f-ui);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:6px;cursor:pointer}
+#dreApp button.btn:hover{border-color:var(--muted)}
+#dreApp button.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+#dreApp button.btn.danger{color:var(--neg)}
+#dreApp button.btn:disabled{opacity:.5;cursor:not-allowed}
+#dreApp button.link{background:none;border:0;color:var(--accent);font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px}
+#dreApp :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#dreApp input,#dreApp select,#dreApp textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;min-width:0}
+#dreApp label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+#dreApp .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);max-width:100%}
+#dreApp table{border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums;width:100%}
+#dreApp th,#dreApp td{padding:5px 10px;border:0;border-bottom:1px solid var(--line);white-space:nowrap}
+#dreApp thead th{position:sticky;top:0;background:var(--accent);z-index:2;font:700 12px var(--f-cond);color:#fff;text-align:right;letter-spacing:.02em;border:0}
+#dreApp thead th:first-child{text-align:left}
+#dreApp td.num,#dreApp th.num{text-align:right}
+#dreApp .dre td:first-child{position:sticky;left:0;background:var(--surface);z-index:1;min-width:250px;max-width:330px;white-space:normal}
+#dreApp .dre thead th:first-child{position:sticky;left:0;z-index:3;min-width:250px}
+#dreApp .dre th.tot,#dreApp .dre td.tot{background:var(--band);font-weight:600}
+#dreApp .dre tr.l0 td:first-child{font-weight:600}
+#dreApp .dre tr.l1 td:first-child{padding-left:22px}
+#dreApp .dre tr.l2 td:first-child{padding-left:40px;color:var(--muted)}
+#dreApp .dre tr.pct td{color:var(--muted);font-style:italic;font-size:12.5px}
+#dreApp .dre tr.dest td{background:var(--band)}
+#dreApp .dre tr.dest td.tot{background:color-mix(in srgb,var(--band) 60%,var(--line))}
+#dreApp .dre tr.big td{border-top:1.5px solid var(--ink);font-weight:700}
+#dreApp .dre tr.cacsep td{border-top:10px solid var(--bg)}
+#dreApp .dre td.cell{cursor:pointer}
+#dreApp .dre td.cell:hover{outline:1px solid var(--accent);outline-offset:-1px}
+#dreApp .dre td.man{position:relative}
+#dreApp .dre td.man::after{content:"";position:absolute;top:4px;right:3px;width:5px;height:5px;border-radius:50%;background:var(--warn)}
+#dreApp .neg{color:var(--neg)}
+#dreApp .tg{background:none;border:0;color:var(--muted);cursor:pointer;font:inherit;padding:0 4px 0 0;width:16px}
+#dreApp .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+#dreApp .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+#dreApp .kpi .h{display:flex;justify-content:space-between;align-items:baseline}
+#dreApp .kpi .h b{font:600 15px var(--f-cond)}
+#dreApp .kpi dl{display:grid;grid-template-columns:1fr auto;gap:3px 10px;margin:0;font-variant-numeric:tabular-nums}
+#dreApp .kpi dt{color:var(--muted);font-size:12.5px}
+#dreApp .kpi dd{margin:0;text-align:right;font-weight:500}
+#dreApp .pill{display:inline-block;font:600 11px var(--f-ui);padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+#dreApp .pill.warn{background:var(--warn-soft);color:var(--warn)}
+#dreApp .drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:18px;text-align:center;background:var(--bg);cursor:pointer}
+#dreApp .drop.over{border-color:var(--accent);background:var(--accent-soft)}
+#dreApp .note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:8px 12px;border-radius:4px;font-size:13px}
+#dreApp .ok{color:var(--ok)}
+#dreApp .stat{display:flex;flex-direction:column}
+#dreApp .stat b{font:600 20px var(--f-cond);font-variant-numeric:tabular-nums}
+#dreApp .stat span{font-size:12px;color:var(--muted)}
+#dreApp .stats{display:flex;gap:28px;flex-wrap:wrap}
+#dreApp .modal-bg{position:fixed;inset:0;background:rgb(0 0 0 / .35);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+#dreApp .modal{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;width:min(420px,100%);display:flex;flex-direction:column;gap:12px}
+#dreApp .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:13px;z-index:60;max-width:calc(100% - 32px)}
+#dreApp .empty{padding:28px;text-align:center;color:var(--muted)}
+#dreApp .pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding-top:8px;font-size:12px}
+#dreApp td input{width:100%;padding:4px 6px}
+#dreApp details summary{cursor:pointer;font-weight:600}
+#dreApp .cacgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+#dreApp .cac-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgb(20 20 10 / .05);min-width:0}
+#dreApp .cac-head{padding:12px 16px 10px;font:700 13.5px var(--f-cond);letter-spacing:.06em;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+#dreApp .cac-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:8px 16px 4px;font:700 10.5px var(--f-ui);text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+#dreApp .cac-cols span:not(:first-child){text-align:right}
+#dreApp .cac-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-items:center;width:100%;border:0;border-top:1px solid var(--line);background:none;padding:10px 16px;font:inherit;color:inherit;text-align:left;cursor:pointer;font-variant-numeric:tabular-nums}
+#dreApp .cac-cols + .cac-row{border-top:0}
+#dreApp .cac-row .per{font-weight:600;font-size:13px}
+#dreApp .cac-row .v{text-align:right;font-weight:700;font-size:15px;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+#dreApp .cac-row .v2{color:var(--muted);font-weight:600}
+#dreApp .cac-row .bar{display:block;width:100%;max-width:90px;height:3px;border-radius:2px;background:var(--line);overflow:hidden}
+#dreApp .cac-row .bar i{display:block;height:100%;margin-left:auto;background:var(--accent);border-radius:2px}
+#dreApp .cac-row:hover{background:var(--accent-soft)}
+#dreApp .cac-row.sel{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--accent)}
+#dreApp .cac-row.sel .per{color:var(--accent)}
+#dreApp .cac-row.custom .per{font-style:italic}
+#dreApp .cac-row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+#dreApp .cacdet{display:flex;flex-direction:column;gap:12px}
+#dreApp .cacdet-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:start}
+@media (max-width:900px){#dreApp .cacdet-grid{grid-template-columns:1fr}}
+#dreApp table.comp td:first-child{white-space:normal}
+#dreApp table.comp tr.b td{font-weight:600}
+#dreApp table.comp tr.sub td:first-child{padding-left:24px;color:var(--muted)}
+#dreApp table.comp tr.tot td{font-weight:700;border-top:1.5px solid var(--ink)}
+#dreApp .chart{position:relative}
+#dreApp .chart svg{width:100%;height:auto;display:block}
+#dreApp .chart .gl{stroke:var(--line);stroke-width:1}
+#dreApp .chart .base{stroke:var(--muted);stroke-width:1}
+#dreApp .chart .ax{fill:var(--muted);font:11px var(--f-ui)}
+#dreApp .chart .lbl{fill:var(--ink);font:600 11px var(--f-ui)}
+#dreApp .chart .bm{fill:var(--accent);opacity:.55}
+#dreApp .chart .bm.last{opacity:1}
+#dreApp .chart .bar:hover .bm{opacity:1}
+#dreApp .tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:12px;box-shadow:0 4px 14px rgb(0 0 0 / .12);white-space:nowrap;z-index:5}
+@media (max-width:600px){#dreApp .dre td:first-child,#dreApp .dre th:first-child{min-width:170px}}
+@media (prefers-reduced-motion:reduce){#dreApp *{transition:none!important}}
 </style>
 </head>
 <body>
@@ -542,6 +686,12 @@
   <button id="logoutBtn" style="background:#fff; border:1px solid #d4d2c9; border-radius:6px; padding:5px 12px; font-size:12px; cursor:pointer;">Sair</button>
 </div>
 
+<div class="mod-tabs" id="modTabs" role="tablist" aria-label="Módulo">
+  <button class="mod-btn active" data-mod="rec" role="tab">Comissão Diretor Comercial</button>
+  <button class="mod-btn" data-mod="dre" role="tab">DRE Comercial</button>
+</div>
+
+<div id="modRec">
 <h1>Fluxo de Recebimento <span id="tituloLinha">FL</span></h1>
 
 <div class="line-tabs" id="lineTabs">
@@ -961,6 +1111,20 @@
       </div>
     </div>
   </div>
+</div>
+</div><!-- /modRec -->
+
+<div id="dreApp" hidden>
+  <div class="brand">
+    <h1>DRE Comercial</h1>
+    <span class="sub">DRE gerencial e CAC por produto · Insider · Ingressos · FL · Plat</span>
+    <span class="status" id="dre-status">Carregando…</span>
+    <button class="btn" data-act="recarregar" title="Buscar os dados mais recentes">Recarregar</button>
+  </div>
+  <nav class="tabs" id="dre-tabs" role="tablist"></nav>
+  <div id="dre-main"></div>
+  <div id="dre-modal-root"></div>
+  <div id="dre-toast" class="toast" hidden></div>
 </div>
 </div>
 
@@ -3598,6 +3762,1298 @@ document.getElementById('trocaSenhaBtn').addEventListener('click', async () => {
   document.getElementById('trocaSenhaModal').style.display = 'none';
   await onLoggedIn(data.user);
 });
+
+// ===============================================================
+// MÓDULOS: Comissão Diretor Comercial (painel de recebimento) e DRE Comercial
+// ===============================================================
+// Garante que todo o conteúdo do painel de recebimento fique dentro de #modRec
+// (o HTML original tem blocos que fecham fora do lugar) e que a DRE fique dentro de #appContent.
+(function organizarModulos(){
+  const app = document.getElementById('appContent'), rec = document.getElementById('modRec'), dre = document.getElementById('dreApp');
+  let n = rec.nextSibling;
+  while (n) { const prox = n.nextSibling; if (n !== dre) rec.appendChild(n); n = prox; }
+  app.appendChild(dre);
+})();
+document.querySelectorAll('.mod-btn').forEach(btn => btn.addEventListener('click', () => {
+  const mod = btn.dataset.mod;
+  document.querySelectorAll('.mod-btn').forEach(b => b.classList.toggle('active', b === btn));
+  document.getElementById('modRec').style.display = mod === 'rec' ? '' : 'none';
+  document.getElementById('dreApp').hidden = mod !== 'dre';
+  document.title = mod === 'dre' ? 'DRE Comercial' : ('Fluxo de Recebimento ' + LINHAS[linhaAtual].nome);
+  if (mod === 'dre') window.dreComercial.abrir();
+}));
+document.getElementById('logoutBtn').addEventListener('click', () => {
+  window.dreComercial.sair();
+  document.querySelector('.mod-btn[data-mod="rec"]').click();
+});
+</script>
+<script>
+/* ===== DRE Comercial: motor de cálculo ===== */
+/* Motor da DRE por produto — replica a lógica da planilha "CAC - Comercial 08 Time".
+   Usado no navegador (window.DRE) e no Node (module.exports) para validação. */
+(function (root) {
+  const norm = s => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase();
+
+  // Colunas da aba COMISSÕES (posição no array da linha)
+  const C = { E: 4, F: 5, G: 6, H: 7, I: 8, J: 9, K: 10, L: 11, M: 12, N: 13, O: 14, P: 15, Q: 16, R: 17 };
+
+  const PRODUTOS = {
+    INSIDER: { nome: 'Insider', grupos: ['insider', '6d'] },
+    INGRESSOS: { nome: 'Ingressos', grupos: ['ingresso'] },
+    FL: { nome: 'FL', grupos: ['fl + fia', 'fl'] },
+    PLAT: { nome: 'Plat', grupos: ['plat'] },
+  };
+
+  const PARAMS_PADRAO = {
+    INSIDER: { proj: 0.6, gmail: 90, slack: 16 },
+    INGRESSOS: { gmail: 90, slack: 16 },
+    FL: { proj: 0.6, gmail: 90, slack: 16 },
+    PLAT: { proj: 0.6 },
+  };
+
+  // Regras de despesas (aba DESPESAS GERAIS) — equivalentes aos SUMIFS das abas de DRE.
+  // empresa '' = qualquer; pct = % de rateio; de/ate = vigência (AAAA-MM), vazio = sem limite.
+  const R = (prod, secao, parceiro, empresa, pct, de, ate) => ({ prod, secao, parceiro, empresa: empresa || '', pct: pct == null ? 1 : pct, de: de || '', ate: ate || '' });
+  const REGRAS_PADRAO = [
+    R('INSIDER', 'ads', 'Online Ads Contratação (Facebook)', '', 0.8),
+    R('INSIDER', 'pessoal', 'IGOR SOUSA CRUZ', '2', 1),
+    R('INSIDER', 'pessoal', 'KEZYA FARIAS MARTINS', '', 1),
+    R('INSIDER', 'pessoal', 'KAROLINE SILVA DOS SANTOS', '', 1),
+    R('INSIDER', 'pessoal', 'ANA LUIZA DA SILVA FERREIRA BADU', '', 1),
+    R('INSIDER', 'gerais', 'CLINT', '2', 1, '', '2025-12'),
+    R('INSIDER', 'gerais', 'CLINT', '2', 0.9, '2026-01'),
+    R('INSIDER', 'gerais', 'CALENDLY', '2', 1, '', '2025-06'),
+    R('INSIDER', 'gerais', 'CALENDLY', '2', 0.9, '2025-07'),
+    R('INSIDER', 'gerais', '3C Plus', '', 0.25),
+    R('INSIDER', 'servicos', 'CARINA DE OLIVEIRA E OLIVEIRA', '2', 1),
+    R('INSIDER', 'servicos', 'FERNANDA SAMPAIAO (FREELANCER)', '2', 0.5, '2026-05'),
+    R('INGRESSOS', 'gerais', '3C Plus', '', 0.5),
+    R('FL', 'ads', 'Online Ads Contratação (Facebook)', '', 0.2),
+    R('FL', 'gerais', 'CLINT', '1', 1, '2025-06', '2025-12'),
+    R('FL', 'gerais', 'CLINT', '2', 0.1, '2026-01'),
+    R('FL', 'gerais', 'CALENDLY', '2', 1, '', '2025-06'),
+    R('FL', 'gerais', 'CALENDLY', '2', 0.1, '2025-07'),
+    R('FL', 'gerais', '3C Plus', '', 0.25),
+    R('FL', 'servicos', 'IGOR SOUSA CRUZ', '1', 1),
+    R('FL', 'servicos', 'RHUAN CORREIA DA PENHA RIBEIRO', '1', 1),
+    R('FL', 'servicos', 'LEONARDO CHAPIEWSKY', '1', 1),
+    R('FL', 'servicos', 'CARINA DE OLIVEIRA E OLIVEIRA', '1', 1),
+    R('FL', 'servicos', 'FERNANDA SAMPAIAO (FREELANCER)', '1', 1, '', '2026-03'),
+    R('FL', 'servicos', 'FERNANDA SAMPAIAO (FREELANCER)', '2', 0.5, '2026-04'),
+  ];
+
+  // ---------- índices ----------
+  function ym(s) { if (!s) return ''; s = String(s); return s.slice(0, 7); }
+
+  function indexar(base) {
+    const pv = {}; // pv[produtoKey][mes] = {n, contrato, quitado, aReceber, cancelado, devolvido}
+    const grupoDe = {};
+    for (const k in PRODUTOS) for (const g of PRODUTOS[k].grupos) grupoDe[g] = k;
+    for (const r of base.bd || []) {
+      const p = grupoDe[norm(r[12])]; if (!p) continue;
+      const m = ym(r[11]); if (!m) continue;
+      const o = ((pv[p] = pv[p] || {})[m] = pv[p][m] || { n: 0, contrato: 0, quitado: 0, aReceber: 0, cancelado: 0, devolvido: 0 });
+      o.n++; o.contrato += +r[5] || 0; o.quitado += +r[6] || 0;
+      o.aReceber += (+r[5] || 0) - (+r[6] || 0); // "Vlr a Receber Ajustado" = contrato - quitado
+      o.devolvido += +r[8] || 0; o.cancelado += +r[9] || 0;
+    }
+    const com = {};
+    for (const r of base.com || []) {
+      const m = ym(r[0]); (com[m] = com[m] || []).push({ tipo: norm(r[1]), funcao: norm(r[2]), empresa: norm(r[3]), v: r });
+    }
+    const desp = {};
+    for (const r of base.desp || []) {
+      const m = ym(r[7] || r[1]); (desp[m] = desp[m] || []).push({ empresa: String(r[0] == null ? '' : r[0]).replace(/\.0+$/, '').trim(), parceiro: norm(r[2]), valor: +r[3] || 0 });
+    }
+    return { pv, com, desp };
+  }
+
+  function mesesDisponiveis(base, idx) {
+    let max = '2026-07';
+    const bump = m => { if (m && m > max) max = m; };
+    for (const p in idx.pv) for (const m in idx.pv[p]) bump(m);
+    for (const m in idx.com) bump(m);
+    for (const m in idx.desp) bump(m);
+    const out = []; let y = 2025, mo = 4;
+    while (true) { const k = y + '-' + String(mo).padStart(2, '0'); out.push(k); if (k >= max) break; mo++; if (mo > 12) { mo = 1; y++; } }
+    return out;
+  }
+
+  // ---------- helpers de cálculo ----------
+  function mk(idx, prod, params, regras, manual) {
+    const P = params;
+    const pv = (m, f) => ((idx.pv[prod] || {})[m] || {})[f] || 0;
+    const com = (m, cols, f = {}) => {
+      let s = 0;
+      for (const r of idx.com[m] || []) {
+        if (f.funcao && r.funcao !== norm(f.funcao)) continue;
+        if (f.tipo && r.tipo !== norm(f.tipo)) continue;
+        if (f.empresa && r.empresa !== norm(f.empresa)) continue;
+        for (const c of cols) s += +r.v[C[c]] || 0;
+      }
+      return s;
+    };
+    const hc = (m, tipo) => (idx.com[m] || []).filter(r => r.tipo === norm(tipo)).length;
+    const desp = (m, rg) => {
+      if ((rg.de && m < rg.de) || (rg.ate && m > rg.ate)) return 0;
+      let s = 0; const pn = norm(rg.parceiro);
+      for (const r of idx.desp[m] || []) {
+        if (r.parceiro !== pn) continue;
+        if (rg.empresa && r.empresa !== String(rg.empresa)) continue;
+        s += r.valor;
+      }
+      return -s * (+rg.pct);
+    };
+    const man = manual || {};
+    return { P, pv, com, hc, desp, man, regras: regras.filter(r => r.prod === prod) };
+  }
+
+  // Estrutura de linhas. t: 'v' (valor, total = soma), 'p' (percentual, recalculado), 'n' (quantidade), 'h' (título de grupo).
+  // nivel: 0 = linha principal, 1 = subgrupo, 2 = detalhe.
+  function estrutura(prod, H) {
+    const L = [];
+    const add = (key, label, t, nivel, calc, extra) => L.push(Object.assign({ key, label, t, nivel, calc }, extra || {}));
+    const despLinhas = (secao) => {
+      const nomes = [];
+      for (const r of H.regras) if (r.secao === secao && !nomes.includes(r.parceiro)) nomes.push(r.parceiro);
+      return nomes.map(n => ({ key: 'd:' + secao + ':' + norm(n), label: n, regras: H.regras.filter(r => r.secao === secao && r.parceiro === n) }));
+    };
+    const somaDesp = (rs) => (m) => rs.reduce((s, rg) => s + H.desp(m, rg), 0);
+
+    // --- Receita (comum) ---
+    add('qtd', 'Qtd de Vendas', 'n', 0, (m) => H.pv(m, 'n'));
+    add('ticket', 'Ticket Médio', 'v', 1, (m, v) => v.qtd ? v.contrato / v.qtd : 0, { ratio: true });
+    add('contrato', 'Receita Vendida (Contrato)', 'v', 0, (m) => H.pv(m, 'contrato'));
+    add('recebido', 'Receita Bruta Mentorias (Recebido)', 'v', 0, (m) => H.pv(m, 'quitado'));
+    add('pct_rec', '% da Receita Bruta Recebida', 'p', 1, (m, v) => v.contrato ? v.recebido / v.contrato : 0);
+    if (prod !== 'INGRESSOS') add('a_receber', 'Receita A Receber', 'v', 0, (m) => H.pv(m, 'aReceber'));
+    add('cancel', '(-) Cancelados/Inadimplência', 'v', 0, (m) => -H.pv(m, 'cancelado'));
+    add('pct_cancel', '% Cancelamento/Inadimplência', 'p', 1, (m, v) => v.contrato ? v.cancel / v.contrato : 0);
+    if (prod !== 'INGRESSOS') {
+      add('proj', 'Projeção Receita Bruta (Contrato)', 'v', 0, (m, v) => ((v.contrato - v.recebido) + v.cancel) * (+H.P.proj || 0), { param: 'proj' });
+      add('pct_proj', '% Projeção', 'p', 1, (m, v) => v.contrato ? v.proj / v.contrato : 0);
+    }
+    add('rec_liq', 'Receita Líquida', 'v', 0, (m, v) => v.contrato + v.cancel, { destaque: true });
+
+    // --- Online Ads (INSIDER, FL) ---
+    const ads = (prod === 'INSIDER' || prod === 'FL') ? despLinhas('ads') : [];
+    if (ads.length) add('ads', 'Online Ads Contratação (Facebook)', 'v', 0, (m) => ads.reduce((s, d) => s + somaDesp(d.regras)(m), 0));
+
+    // --- Consultoria de vendas (comissões) ---
+    const grupos = []; // chaves de subgrupos que somam na consultoria
+    const sub = (key, label) => { grupos.push(key); add(key, label, 'v', 1, (m, v) => (v[key + '_var'] || 0) + (v[key + '_fix'] || 0)); };
+    const det = (key, label, calc) => add(key, label, 'v', 2, calc);
+
+    add('consultoria', '(-) Consultoria de Vendas', 'v', 0, (m, v) => grupos.reduce((s, k) => s + (v[k] || 0), 0), { destaque: true });
+    const tipoHC = { INSIDER: 'Mentoria', INGRESSOS: 'Ingressos', FL: 'FL', PLAT: null }[prod];
+    add('hc', 'Headcount', 'n', 1, (m) => tipoHC ? H.hc(m, tipoHC) : 0, { info: true });
+
+    if (prod === 'INSIDER') {
+      const varF = (f) => (m) => -H.com(m, ['F'], { funcao: f });
+      const varFK = (f) => (m) => -H.com(m, ['F', 'K'], { funcao: f });
+      const fixo = (f) => (m) => -H.com(m, ['E'], { funcao: f, tipo: 'Mentoria' });
+      sub('vend', 'Vendedor'); det('vend_var', 'Variável', varF('Vendedor')); det('vend_fix', 'Fixo', fixo('Vendedor'));
+      sub('supv', 'Supervisor - Vendas'); det('supv_var', 'Variável', varFK('Supervisor - Vendas')); det('supv_fix', 'Fixo', fixo('Supervisor - Vendas'));
+      sub('sdr', 'SDR'); det('sdr_var', 'Variável', varF('SDR')); det('sdr_fix', 'Fixo', fixo('SDR'));
+      sub('supsdr', 'Supervisor - SDR'); det('supsdr_var', 'Variável', varFK('Supervisor - SDR')); det('supsdr_fix', 'Fixo', fixo('Supervisor - SDR'));
+      sub('ger', 'Gerente'); det('ger_var', 'Variável', varFK('Gerente')); det('ger_fix', 'Fixo', (m) => -H.com(m, ['E'], { funcao: 'Gerente', empresa: 'Insider' }));
+      sub('dir', 'Diretor'); det('dir_var', 'Variável', () => 0); det('dir_fix', 'Fixo', () => 0);
+      grupos.push('bonus'); add('bonus', 'Bônus', 'v', 1, (m) => -H.com(m, ['I']));
+      grupos.push('levantada'); add('levantada', 'Levantada de Mão', 'v', 1, (m) => -H.com(m, ['J']));
+      grupos.push('distrato'); add('distrato', 'Distrato', 'v', 1, () => 0);
+      grupos.push('fixo30'); add('fixo30', 'Fixo 30 Dias', 'v', 1, () => 0);
+    } else if (prod === 'INGRESSOS') {
+      const v = (f) => (m) => -H.com(m, ['L'], { funcao: f });
+      const vLM = (f) => (m) => -H.com(m, ['L', 'M'], { funcao: f });
+      const fixo = (f) => (m) => -H.com(m, ['E'], { funcao: f, tipo: 'Ingressos' });
+      sub('vend', 'Vendedor'); det('vend_var', 'Variável', v('Vendedor')); det('vend_fix', 'Fixo', fixo('Vendedor'));
+      sub('sdr', 'SDR'); det('sdr_var', 'Variável', v('SDR')); det('sdr_fix', 'Fixo', () => 0);
+      sub('sup', 'Supervisor'); det('sup_var', 'Variável', vLM('Supervisor')); det('sup_fix', 'Fixo', fixo('Supervisor'));
+      sub('ger', 'Gerente'); det('ger_var', 'Variável', vLM('Gerente'));
+      det('ger_fix', 'Fixo', (m) => m < '2025-11' ? 0 : -H.com(m, ['E'], { funcao: 'Gerente', empresa: 'Insider', tipo: 'Mentoria' }) - H.com(m, ['E'], { funcao: 'Gerente', empresa: 'Insider', tipo: 'FL' }));
+      sub('dir', 'Diretor'); det('dir_var', 'Variável', () => 0); det('dir_fix', 'Fixo', () => 0);
+    } else if (prod === 'FL') {
+      const v = (f) => (m) => -H.com(m, ['N'], { funcao: f });
+      const vNP = (f) => (m) => -H.com(m, ['N', 'P'], { funcao: f });
+      const fixo = (f) => (m) => -H.com(m, ['E'], { funcao: f, tipo: 'FL' });
+      sub('vend', 'Vendedor'); det('vend_var', 'Variável', v('Vendedor')); det('vend_fix', 'Fixo', fixo('Vendedor'));
+      sub('supv', 'Supervisor - Vendas'); det('supv_var', 'Variável', vNP('Supervisor - Vendas')); det('supv_fix', 'Fixo', fixo('Supervisor - Vendas'));
+      sub('sdr', 'SDR'); det('sdr_var', 'Variável', v('SDR')); det('sdr_fix', 'Fixo', fixo('SDR'));
+      sub('supsdr', 'Supervisor - SDR'); det('supsdr_var', 'Variável', vNP('Supervisor - SDR')); det('supsdr_fix', 'Fixo', fixo('Supervisor - SDR'));
+      sub('ger', 'Gerente'); det('ger_var', 'Variável', vNP('Gerente')); det('ger_fix', 'Fixo', () => 0);
+      sub('dir', 'Diretor'); det('dir_var', 'Variável', () => 0); det('dir_fix', 'Fixo', () => 0);
+      grupos.push('distrato'); add('distrato', 'Distrato', 'v', 1, () => 0);
+      grupos.push('fixo30'); add('fixo30', 'Fixo 30 Dias', 'v', 1, () => 0);
+    } else if (prod === 'PLAT') {
+      sub('vend', 'Vendedor'); det('vend_var', 'Variável', (m) => -H.com(m, ['Q'], { funcao: 'Vendedor' })); det('vend_fix', 'Fixo', () => 0);
+      sub('sup', 'Supervisor'); det('sup_var', 'Variável', (m) => -H.com(m, ['Q', 'R'], { funcao: 'Supervisor' })); det('sup_fix', 'Fixo', () => 0);
+      const ger2025 = (m) => m >= '2025-08' && m <= '2025-12';
+      sub('ger', 'Gerente');
+      det('ger_var', 'Variável', (m) => ger2025(m) ? -H.com(m, ['F', 'K'], { funcao: 'Gerente' }) : 0);
+      det('ger_fix', 'Fixo', (m) => ger2025(m) ? -H.com(m, ['E'], { funcao: 'Gerente', empresa: 'Insider', tipo: 'Mentoria' }) - H.com(m, ['E'], { funcao: 'Gerente', empresa: 'Insider', tipo: 'FL' }) : 0);
+      sub('dir', 'Diretor'); det('dir_var', 'Variável', () => 0); det('dir_fix', 'Fixo', () => 0);
+    }
+
+    // Lucro bruto
+    add('lucro_bruto', '(=) Lucro Bruto', 'v', 0, (m, v) => v.rec_liq + v.consultoria + (v.ads || 0), { total: true });
+    add('mg_bruta', '% Margem Bruta', 'p', 1, (m, v) => v.contrato ? v.lucro_bruto / v.contrato : 0);
+
+    // Despesas administrativas
+    const admGrupos = [];
+    const temAdm = prod !== 'PLAT';
+    add('adm', '(-) Despesas Administrativas', 'v', 0, (m, v) => admGrupos.reduce((s, k) => s + (v[k] || 0), 0), { destaque: true });
+    if (temAdm) {
+      const secao = (key, label, secaoKey, extras) => {
+        const ds = despLinhas(secaoKey); const filhos = [];
+        admGrupos.push(key);
+        add(key, label, 'v', 1, (m, v) => filhos.reduce((s, k) => s + (v[k] || 0), 0));
+        for (const d of ds) { filhos.push(d.key); add(d.key, d.label, 'v', 2, somaDesp(d.regras), { regra: true }); }
+        for (const e of (extras || [])) { filhos.push(e.key); add(e.key, e.label, 'v', 2, e.calc, { param: e.param }); }
+      };
+      if (prod === 'INSIDER') secao('pessoal', 'Despesa com Pessoal', 'pessoal');
+      const porHC = [];
+      if (H.P.gmail != null) porHC.push({ key: 'gmail', label: 'G-mail', param: 'gmail', calc: (m, v) => -v.hc * (+H.P.gmail || 0) });
+      if (H.P.slack != null) porHC.push({ key: 'slack', label: 'Slack', param: 'slack', calc: (m, v) => -v.hc * (+H.P.slack || 0) });
+      secao('gerais', 'Despesas Gerais', 'gerais', porHC);
+      secao('servicos', 'Despesa com Serviços', 'servicos');
+    } else {
+      admGrupos.push('adm_manual');
+      add('adm_manual', 'Lançamentos administrativos', 'v', 1, () => 0);
+    }
+
+    // CAC
+    const cacNum = (v) => (v.ads || 0) + v.consultoria + v.adm;
+    add('cac_bruto', 'CAC Bruto', 'p', 0, (m, v) => v.contrato ? cacNum(v) / v.contrato : 0, { cac: true });
+    add('cac_liq', 'CAC Líquido (sobre recebido)', 'p', 0, (m, v) => v.recebido ? cacNum(v) / v.recebido : 0, { cac: true });
+    return L;
+  }
+
+  // Ordem de cálculo: linhas que dependem de outras abaixo (consultoria, adm, ir_cs) — resolvemos em 2 passes.
+  function calcular(prod, base, opts) {
+    opts = opts || {};
+    const idx = opts.idx || indexar(base);
+    const params = Object.assign({}, PARAMS_PADRAO[prod], (opts.params || {})[prod] || {});
+    const regras = opts.regras || REGRAS_PADRAO;
+    const manual = {}; // manual[key][mes] = valor
+    for (const e of opts.manual || []) if (e.prod === prod) ((manual[e.key] = manual[e.key] || {})[e.mes] = (manual[e.key][e.mes] || 0) + (+e.valor || 0));
+    const H = mk(idx, prod, params, regras, manual);
+    const linhas = estrutura(prod, H);
+    const meses = opts.meses || mesesDisponiveis(base, idx);
+    const byKey = Object.fromEntries(linhas.map(l => [l.key, l]));
+
+    function avaliar(v, m) {
+      // dependências: avaliar recursivamente com memo
+      const memo = {};
+      const proxy = new Proxy({}, { get: (_, k) => get(k) });
+      function get(k) {
+        if (k in memo) return memo[k];
+        const l = byKey[k]; if (!l) return 0;
+        memo[k] = 0; // proteção contra ciclos
+        let val;
+        if (manual[k] && m in manual[k]) val = manual[k][m];
+        else val = l.calc(m, proxy);
+        memo[k] = Number.isFinite(val) ? val : 0;
+        return memo[k];
+      }
+      for (const l of linhas) v[l.key] = get(l.key);
+      return v;
+    }
+
+    const porMes = {};
+    for (const m of meses) porMes[m] = avaliar({}, m);
+
+    // Totais: anos e consolidado — linhas aditivas somam; percentuais e ticket recalculam a partir dos totais
+    const anos = [...new Set(meses.map(m => m.slice(0, 4)))];
+    const periodos = anos.map(a => ({ id: a, meses: meses.filter(m => m.startsWith(a)) }));
+    periodos.push({ id: 'consolidado', meses });
+    const totais = {};
+    for (const p of periodos) {
+      const t = {};
+      for (const l of linhas) if (!(l.t === 'p' || l.ratio)) t[l.key] = p.meses.reduce((s, m) => s + porMes[m][l.key], 0);
+      const proxy = new Proxy({}, { get: (_, k) => t[k] || 0 });
+      for (const l of linhas) if (l.t === 'p' || l.ratio) { const x = l.calc(null, proxy); t[l.key] = Number.isFinite(x) ? x : 0; }
+      totais[p.id] = t;
+    }
+    return { prod, linhas: linhas.map(({ calc, ...r }) => r), meses, porMes, totais, anos, manual };
+  }
+
+  const api = { PRODUTOS, PARAMS_PADRAO, REGRAS_PADRAO, indexar, calcular, mesesDisponiveis, norm };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.DRE = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* ===== DRE Comercial: telas ===== */
+(function(){
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = DRE.norm;
+const nk = s => norm(s).replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+const PRODS = ['INSIDER','INGRESSOS','FL','PLAT'];
+const PNOME = {INSIDER:'Insider',INGRESSOS:'Ingressos',FL:'FL',PLAT:'Plat'};
+const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const mesLabel = m => MESES[+m.slice(5,7)-1] + '/' + m.slice(2,4);
+const fmt0 = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+const fmt2 = new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtP = new Intl.NumberFormat('pt-BR',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1});
+const money = v => Math.abs(v) < 0.5 ? '–' : fmt0.format(v);
+const money2 = v => fmt2.format(v||0);
+const fmtCac = v => new Intl.NumberFormat('pt-BR',{style:'percent',minimumFractionDigits:2,maximumFractionDigits:2}).format(v||0);
+const pct = v => Math.abs(v) < 0.00005 ? '–' : fmtP.format(v);
+
+// Linhas preenchidas apenas por lançamento manual (na planilha eram digitadas)
+const MANUAIS = {
+  INSIDER:['dir_var','dir_fix','distrato','fixo30'],
+  INGRESSOS:['dir_var','dir_fix','sdr_fix'],
+  FL:['dir_var','dir_fix','ger_fix','distrato','fixo30'],
+  PLAT:['dir_var','dir_fix','vend_fix','sup_fix','adm_manual'],
+};
+
+const S = {
+  tab: 'resumo', ano: null, expand: {}, db: null, offline: false, canWrite: true,
+  bd: [], com: [], desp: [], params: {}, regras: null, manual: [],
+  meta: {}, loaded: {}, got: {}, res: null, dirty: true,
+  bdPage: 0, bdQ: '', bdProd: '', bdMes: '', despMes: '', comMes: '', ajProd: '',
+  up: {}, // estados de upload por aba
+};
+
+// ---------------- persistência (Supabase, tabela app_data) ----------------
+// Cada base fica em registros 'dre_<base>_meta' + 'dre_<base>_0', 'dre_<base>_1'… (partes de até ~700 KB)
+const DATASETS = ['bd','com','desp'];
+const PFX = 'dre_';
+function setStatus(t){ const el = $('#dre-status'); if (el) el.textContent = t; }
+function toast(t){ const el=$('#dre-toast'); el.textContent=t; el.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>el.hidden=true,3600); }
+async function sbGet(id){
+  const { data, error } = await sb.from('app_data').select('rows').eq('id', id).maybeSingle();
+  if (error) throw error;
+  return data ? data.rows : null;
+}
+async function sbSet(id, payload){
+  const { error } = await sb.from('app_data').upsert({ id, rows: payload, updated_at: new Date().toISOString() });
+  if (error) throw error;
+}
+async function sbDel(id){ try { await sb.from('app_data').delete().eq('id', id); } catch(e){} }
+
+async function boot(){
+  S.canWrite = (typeof isAdminView !== 'undefined') && !!isAdminView;
+  if (S.booted) { render(); return; }
+  S.booted = true;
+  render();
+  await carregarTudo();
+}
+async function carregarTudo(){
+  S.got = {}; S.erroCarga = ''; render(); setStatus('Carregando…');
+  try {
+    const [pr, mn, lg] = await Promise.all([sbGet(PFX+'params'), sbGet(PFX+'manual'), sbGet(PFX+'log')]);
+    S.params = (pr && pr.params) || {}; S.regras = pr && Array.isArray(pr.regras) ? pr.regras : null; S.got.params = true;
+    S.manual = (mn && Array.isArray(mn.itens)) ? mn.itens : []; S.got.manual = true;
+    S.log = Array.isArray(lg) ? lg : [];
+    await Promise.all(DATASETS.map(async name => {
+      const meta = await sbGet(PFX + name + '_meta');
+      S.meta[name] = meta;
+      if (!meta) { S[name] = []; S.got[name] = true; return; }
+      const partes = await Promise.all(Array.from({length: meta.n}, (_, i) => sbGet(PFX + name + '_' + i)));
+      if (!partes.every(p => p && p.ver === meta.ver)) throw new Error('a base "' + name + '" está sendo atualizada por outra pessoa. Clique em Recarregar em alguns segundos.');
+      const rows = []; for (const p of partes) for (const r of p.rows) rows.push(r);
+      if (name === 'bd') for (const r of rows) r[7] = calcReceber(r);
+      S[name] = rows; S.got[name] = true;
+    }));
+  } catch(e) { S.erroCarga = (e && e.message) || String(e); }
+  S.dirty = true; render();
+}
+
+function chunkRows(rows){
+  const out = []; let cur = [], size = 2;
+  const enc = new TextEncoder();
+  for (const r of rows) {
+    const b = enc.encode(JSON.stringify(r)).length + 1;
+    if (size + b > 700000 && cur.length) { out.push(cur); cur = []; size = 2; }
+    cur.push(r); size += b;
+  }
+  if (cur.length || !out.length) out.push(cur);
+  return out;
+}
+
+async function registrarLog(base, resumo){
+  S.log = (S.log || []).concat([{ quando: new Date().toISOString(), base, resumo, por: (typeof currentUser !== 'undefined' && currentUser && currentUser.email) || '' }]).slice(-100);
+  try { await sbSet(PFX+'log', S.log); } catch(e){}
+}
+
+async function saveDataset(name, rows, resumoLog){
+  if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.');
+  const ver = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+  const chunks = chunkRows(rows);
+  for (let i = 0; i < chunks.length; i++) {
+    setStatus(`Salvando ${name}: parte ${i+1} de ${chunks.length}…`);
+    await sbSet(PFX + name + '_' + i, { ver, rows: chunks[i] });
+  }
+  const old = (S.meta[name] && S.meta[name].n) || 0;
+  const meta = { ver, n: chunks.length, total: rows.length, atualizado: new Date().toISOString() };
+  await sbSet(PFX + name + '_meta', meta);
+  S.meta[name] = meta; S[name] = rows; S.dirty = true;
+  for (let i = chunks.length; i < old; i++) await sbDel(PFX + name + '_' + i);
+  if (resumoLog) await registrarLog(name, resumoLog);
+  setStatus('Salvo');
+}
+async function saveParams(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'params', { params: S.params, regras: S.regras || DRE.REGRAS_PADRAO }); }
+async function saveManual(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'manual', { itens: S.manual }); }
+
+function writeErr(e){
+  const msg = (e && (e.message || e.code)) || 'erro';
+  if (/row-level security|permission|42501/i.test(msg)) toast('O banco não permitiu salvar: somente administradores podem alterar os dados.');
+  else toast('Não foi possível salvar: ' + msg);
+  setStatus('Erro ao salvar');
+}
+
+// importação do arquivo .json exportado do sistema anterior (carga inicial)
+async function importarJSON(file){
+  let d;
+  try { d = JSON.parse(await file.text()); } catch(e) { toast('Esse arquivo não é um .json válido.'); return; }
+  if (!d || d.tipo !== 'dre-comercial' || !Array.isArray(d.bd)) { toast('Esse arquivo não é a exportação da DRE Comercial.'); return; }
+  confirmar('Importar dados da DRE Comercial?', `${fmt0.format(d.bd.length)} vendas, ${fmt0.format((d.com||[]).length)} linhas de comissão, ${fmt0.format((d.desp||[]).length)} despesas e ${fmt0.format((d.manual||[]).length)} ajustes manuais vão substituir o que está salvo na DRE Comercial.`, 'Importar', async () => {
+    try {
+      setStatus('Importando…');
+      S.params = d.params || {}; S.regras = Array.isArray(d.regras) ? d.regras : null; await saveParams();
+      S.manual = Array.isArray(d.manual) ? d.manual : []; await saveManual();
+      await saveDataset('bd', d.bd.map(r => { const x = r.slice(); x[7] = calcReceber(x); return x; }));
+      await saveDataset('com', d.com || []);
+      await saveDataset('desp', d.desp || []);
+      await registrarLog('todas', `${file.name}: carga inicial (${d.bd.length} vendas)`);
+      toast('Dados importados'); S.dirty = true; render();
+    } catch(e) { writeErr(e); }
+  });
+}
+
+// ---------------- cálculo ----------------
+function regras(){ return S.regras || DRE.REGRAS_PADRAO; }
+function recompute(){
+  if (!S.dirty) return S.res;
+  const base = { bd: S.bd, com: S.com, desp: S.desp };
+  const idx = DRE.indexar(base);
+  const meses = DRE.mesesDisponiveis(base, idx);
+  const res = {};
+  for (const p of PRODS) res[p] = DRE.calcular(p, base, { idx, meses, params: S.params, regras: regras(), manual: S.manual });
+  S.res = res; S.dirty = false;
+  if (!S.ano) S.ano = res.INSIDER.anos[res.INSIDER.anos.length - 1];
+  return res;
+}
+
+// ---------------- render ----------------
+const TABS = [
+  ['resumo','Resumo'],['INSIDER','Insider'],['INGRESSOS','Ingressos'],['FL','FL'],['PLAT','Plat'],['|'],
+  ['bd','Base de vendas'],['desp','Despesas gerais'],['com','Comissões'],['|'],['ajustes','Ajustes manuais'],['params','Parâmetros'],
+];
+function renderTabs(){
+  const ABAS_VIS = ['resumo','INSIDER','INGRESSOS','FL','PLAT'];
+  const abas = S.canWrite ? TABS : TABS.filter(t => ABAS_VIS.includes(t[0]));
+  if (!S.canWrite && !ABAS_VIS.includes(S.tab)) S.tab = 'resumo';
+  $('#dre-tabs').innerHTML = abas.map(t => t[0]==='|' ? '<span class="sep"></span>' :
+    `<button role="tab" data-dtab="${t[0]}" aria-selected="${S.tab===t[0]}">${t[1]}</button>`).join('');
+}
+function ready(){ return S.got.bd && S.got.com && S.got.desp && S.got.params && S.got.manual; }
+
+function render(){
+  renderTabs();
+  const m = $('#dre-main');
+  if (S.erroCarga) { m.innerHTML = `<div class="panel empty">Não foi possível carregar a DRE Comercial: ${esc(S.erroCarga)}<br><br><button class="btn" data-act="recarregar">Tentar de novo</button></div>`; return; }
+  if (!ready()) { m.innerHTML = `<div class="panel empty">Carregando base de vendas, despesas e comissões…</div>`; return; }
+  if (!S.bd.length && !S.com.length && !S.desp.length) {
+    setStatus('Base vazia');
+    if (S.tab === 'resumo') { m.innerHTML = `<div class="panel stack" style="gap:12px;max-width:720px"><h3 style="margin:0">A DRE Comercial ainda não tem dados</h3>
+      <p class="muted" style="margin:0">Faça a carga inicial enviando o arquivo <b>dre_comercial_dados.json</b> (vendas, comissões, despesas, ajustes e regras de rateio). Depois disso, as atualizações são feitas pelas abas Base de vendas, Despesas gerais e Comissões.</p>
+      ${S.canWrite ? dropZone('json','Enviar dre_comercial_dados.json').replace('accept=".xlsx,.xls,.csv"','accept=".json"') : '<p class="note" style="margin:0">Peça a um administrador para fazer a carga inicial.</p>'}</div>`; return; }
+  }
+  else setStatus(`Base: ${fmt0.format(S.bd.length)} vendas · atualizada ${S.meta.bd ? new Date(S.meta.bd.atualizado).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '—'}`);
+  recompute();
+  const t = S.tab;
+  if (t === 'resumo') m.innerHTML = viewResumo();
+  else if (PRODS.includes(t)) m.innerHTML = viewDRE(t);
+  else if (t === 'bd') m.innerHTML = viewBD();
+  else if (t === 'desp') m.innerHTML = viewDesp();
+  else if (t === 'com') m.innerHTML = viewCom();
+  else if (t === 'ajustes') m.innerHTML = viewAjustes();
+  else if (t === 'params') m.innerHTML = viewParams();
+}
+
+function anoChips(){
+  const anos = S.res.INSIDER.anos;
+  return `<div class="chips" role="group" aria-label="Período">${anos.map(a=>`<button class="chip" data-ano="${a}" aria-pressed="${S.ano===a}">${a}</button>`).join('')}<button class="chip" data-ano="tudo" aria-pressed="${S.ano==='tudo'}">${anos[0]}–${anos[anos.length-1]}</button></div>`;
+}
+function colunas(r){
+  const cols = [];
+  const anos = S.ano === 'tudo' ? r.anos : [S.ano];
+  for (const a of anos) {
+    for (const m of r.meses.filter(x => x.startsWith(a))) cols.push({ id: m, label: mesLabel(m), mes: true });
+    cols.push({ id: a, label: 'Total ' + a, tot: true });
+  }
+  if (S.ano === 'tudo') cols.push({ id: 'consolidado', label: 'Consolidado', tot: true });
+  return cols;
+}
+function valor(r, k, c){ return c.mes ? r.porMes[c.id][k] : (r.totais[c.id] || {})[k]; }
+function fmtCell(l, v){
+  if (l.t === 'p') return pct(v);
+  if (l.t === 'n') return Math.abs(v) < 0.5 ? '–' : fmt0.format(v);
+  return money(v);
+}
+
+function viewDRE(p){
+  const r = S.res[p];
+  const cols = colunas(r);
+  const man = r.manual;
+  // pais (nível 1 que tem filhos nível 2)
+  let pai = null; const paiDe = {}; const temFilhos = {};
+  for (const l of r.linhas) { if (l.nivel <= 1) pai = l.key; else { paiDe[l.key] = pai; temFilhos[pai] = true; } }
+  const exp = S.expand[p] || {};
+  let html = `<div class="stack">
+  <div class="row"><h2>DRE Gerencial · ${PNOME[p]}</h2><span class="spacer"></span>${anoChips()}
+    <button class="btn" data-act="expandir" data-p="${p}">${Object.values(exp).some(Boolean)?'Recolher detalhes':'Expandir detalhes'}</button>
+    <button class="btn" data-act="exportar" data-p="${p}">Exportar .xlsx</button></div>
+  <p class="muted small" style="margin:0">Clique num valor mensal para lançar ou corrigir um ajuste manual. <span class="pill warn">●</span> marca valores com ajuste manual.</p>
+  <div class="tbl-wrap"><table class="dre"><thead><tr><th>${PNOME[p]}</th>${cols.map(c=>`<th class="${c.tot?'tot':''}">${c.label}</th>`).join('')}</tr></thead><tbody>`;
+  let cacStarted = false;
+  for (const l of r.linhas) {
+    if (l.nivel === 2 && !exp[paiDe[l.key]]) continue;
+    const cls = ['l'+l.nivel]; if (l.t==='p' && !l.cac) cls.push('pct'); if (l.destaque) cls.push('dest'); if (l.total) cls.push('big');
+    if (l.cac && !cacStarted) { cls.push('cacsep'); cacStarted = true; }
+    const tg = temFilhos[l.key] ? `<button class="tg" data-tg="${l.key}" data-p="${p}" aria-label="Mostrar detalhes">${exp[l.key]?'▾':'▸'}</button>` : '';
+    const nota = MANUAIS[p].includes(l.key) ? ' <span class="muted small">(manual)</span>' : '';
+    html += `<tr class="${cls.join(' ')}"><td>${tg}${esc(l.label)}${nota}</td>`;
+    for (const c of cols) {
+      const v = valor(r, l.key, c);
+      const editable = c.mes && l.t !== 'p' && !l.ratio && S.canWrite;
+      const isMan = c.mes && man[l.key] && (c.id in man[l.key]);
+      html += `<td class="num ${c.tot?'tot':''} ${editable?'cell':''} ${isMan?'man':''} ${v < -0.5 && l.t!=='p' ? 'neg' : ''}" ${editable?`data-cell="${p}|${l.key}|${c.id}"`:''}>${fmtCell(l, v)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += `</tbody></table></div></div>`;
+  return html;
+}
+
+function viewResumo(){
+  const anos = S.res.INSIDER.anos;
+  const per = S.ano === 'tudo' ? 'consolidado' : S.ano;
+  let cards = '';
+  for (const p of PRODS) {
+    const t = S.res[p].totais[per] || {};
+    cards += `<div class="kpi"><div class="h"><b>${PNOME[p]}</b><button class="link small" data-tab-go="${p}">Abrir DRE</button></div><dl>
+      <dt>Vendas</dt><dd>${fmt0.format(t.qtd||0)}</dd>
+      <dt>Receita contratada</dt><dd>${money(t.contrato||0)}</dd>
+      <dt>Recebido</dt><dd>${money(t.recebido||0)}</dd>
+      <dt>Consultoria de vendas</dt><dd class="${(t.consultoria||0)<0?'neg':''}">${money(t.consultoria||0)}</dd>
+      <dt>Lucro bruto</dt><dd>${money(t.lucro_bruto||0)}</dd>
+      <dt>Margem bruta</dt><dd>${pct(t.mg_bruta||0)}</dd>
+      <dt>Despesas administrativas</dt><dd class="${(t.adm||0)<0?'neg':''}">${money(t.adm||0)}</dd>
+      <dt>CAC bruto</dt><dd><b>${pct(t.cac_bruto||0)}</b></dd>
+      <dt>CAC sobre recebido</dt><dd><b>${pct(t.cac_liq||0)}</b></dd></dl></div>`;
+  }
+  const semRegra = parceirosSemRegra();
+  return `<div class="stack">
+    <div class="row"><h2>Resumo</h2></div>
+    ${S.canWrite && semRegra.length ? `<div class="note">Há despesas de ${semRegra.length} parceiro(s) sem regra de rateio, então elas não entram em nenhuma DRE: ${semRegra.slice(0,6).map(esc).join(', ')}${semRegra.length>6?'…':''}. Confira em <button class="link" data-tab-go="params">Parâmetros</button>.</div>`:''}
+    ${viewCAC()}
+    <div class="row" style="margin-top:8px"><h3 style="margin:0">Números por produto</h3><span class="spacer"></span>${anoChips()}</div>
+    <div class="kpis">${cards}</div>
+  </div>`;
+}
+
+// ---------------- CAC interativo ----------------
+const CAC_KEYS_SUM = ['contrato','recebido','ads','consultoria','adm'];
+function cacPeriodos(){
+  const r = S.res.INSIDER, anos = r.anos;
+  const out = anos.map(a => ({ id: a, label: a, meses: r.meses.filter(m => m.startsWith(a)) }));
+  out.push({ id: 'consolidado', label: anos[0] + '-' + anos[anos.length-1], meses: r.meses.slice() });
+  if (S.cacDe && S.cacAte) {
+    const de = S.cacDe <= S.cacAte ? S.cacDe : S.cacAte, ate = S.cacDe <= S.cacAte ? S.cacAte : S.cacDe;
+    out.push({ id: 'custom', label: de === ate ? mesLabel(de) : mesLabel(de) + ' a ' + mesLabel(ate), meses: r.meses.filter(m => m >= de && m <= ate), custom: true });
+  }
+  return out;
+}
+function somaPeriodo(p, meses){
+  const r = S.res[p]; const t = {};
+  for (const l of r.linhas) if (l.t !== 'p' && !l.ratio) t[l.key] = meses.reduce((s, m) => s + (r.porMes[m][l.key] || 0), 0);
+  const custo = (t.ads || 0) + (t.consultoria || 0) + (t.adm || 0);
+  t.custo = custo; t.cac_bruto = t.contrato ? custo / t.contrato : 0; t.cac_liq = t.recebido ? custo / t.recebido : 0;
+  return t;
+}
+function viewCAC(){
+  const pers = cacPeriodos();
+  const meses = S.res.INSIDER.meses;
+  if (!S.cacSel || !pers.some(x => x.id === S.cacSel.per)) S.cacSel = { p: (S.cacSel && S.cacSel.p) || 'INSIDER', per: S.res.INSIDER.anos[S.res.INSIDER.anos.length-1] };
+  const vals = []; for (const p of PRODS) for (const per of pers) vals.push(Math.abs(somaPeriodo(p, per.meses).cac_bruto || 0));
+  const maxCac = Math.max(0.0001, ...vals);
+  let tb = '<div class="cacgrid">';
+  for (const p of PRODS) {
+    tb += `<div class="cac-card"><div class="cac-head">${PNOME[p].toUpperCase()}</div>
+      <div class="cac-cols"><span>Período</span><span>CAC Bruto</span><span>CAC Recebido</span></div>`;
+    for (const per of pers) {
+      const t = somaPeriodo(p, per.meses);
+      const sel = S.cacSel.p === p && S.cacSel.per === per.id;
+      const w = Math.min(100, Math.abs(t.cac_bruto || 0) / maxCac * 100).toFixed(1);
+      tb += `<button type="button" class="cac-row ${sel ? 'sel' : ''} ${per.custom ? 'custom' : ''}" data-cac="${p}|${per.id}" aria-pressed="${sel}" aria-label="Ver composição do CAC ${PNOME[p]} ${per.label}">
+        <span class="per">${per.label}</span>
+        <span class="v">${fmtCac(t.cac_bruto)}<span class="bar" aria-hidden="true"><i style="width:${w}%"></i></span></span>
+        <span class="v v2">${fmtCac(t.cac_liq)}</span></button>`;
+    }
+    tb += '</div>';
+  }
+  tb += '</div>';
+  const opt = v => meses.map(m => `<option value="${m}" ${v === m ? 'selected' : ''}>${mesLabel(m)}</option>`).join('');
+  return `<section class="stack" style="gap:10px" aria-labelledby="cac-h">
+    <div class="row"><h3 id="cac-h" style="margin:0">CAC do Comercial</h3><span class="spacer"></span>
+      <span class="small muted">Período personalizado</span>
+      <select id="cac-de" aria-label="Mês inicial"><option value="">de…</option>${opt(S.cacDe)}</select>
+      <select id="cac-ate" aria-label="Mês final"><option value="">até…</option>${opt(S.cacAte)}</select>
+      ${S.cacDe || S.cacAte ? '<button class="btn" data-act="caclimpa">Limpar</button>' : ''}</div>
+    ${tb}
+    <p class="muted small" style="margin:0">Clique em um período para ver a composição do CAC e a evolução mês a mês. CAC Bruto = (Online Ads + Consultoria de Vendas + Despesas Administrativas) ÷ Receita Vendida (Contrato); o CAC Recebido divide pela Receita Bruta Recebida.</p>
+    ${viewCACDetalhe(pers)}
+  </section>`;
+}
+function viewCACDetalhe(pers){
+  const { p } = S.cacSel; const per = pers.find(x => x.id === S.cacSel.per);
+  const r = S.res[p]; const t = somaPeriodo(p, per.meses);
+  const idx = k => r.linhas.findIndex(l => l.key === k);
+  const filhos = (de, ate) => r.linhas.slice(idx(de) + 1, ate ? idx(ate) : undefined).filter(l => l.nivel === 1 && l.t !== 'p' && l.t !== 'n' && !l.ratio && !l.cac);
+  const linha = (lab, v, cls) => `<tr class="${cls||''}"><td>${lab}</td><td class="num ${v < -0.5 ? 'neg' : ''}">${money(v)}</td><td class="num">${t.contrato ? pct(v / t.contrato) : '–'}</td></tr>`;
+  let comp = linha('Receita Vendida (Contrato)', t.contrato, 'b') + linha('Receita Bruta Recebida', t.recebido);
+  if ('ads' in t) comp += linha('Online Ads Contratação (Facebook)', t.ads, 'b');
+  comp += linha('(-) Consultoria de Vendas', t.consultoria, 'b');
+  for (const l of filhos('consultoria', 'lucro_bruto')) if (Math.abs(t[l.key]) >= 0.5) comp += linha(esc(l.label), t[l.key], 'sub');
+  comp += linha('(-) Despesas Administrativas', t.adm, 'b');
+  for (const l of filhos('adm', 'cac_bruto')) if (Math.abs(t[l.key]) >= 0.5) comp += linha(esc(l.label), t[l.key], 'sub');
+  comp += linha('Custo comercial total', t.custo, 'tot');
+  // gráfico mensal
+  const modo = S.cacModo || 'bruto';
+  const dados = per.meses.map(m => { const x = somaPeriodo(p, [m]); return { m, v: modo === 'bruto' ? x.cac_bruto : x.cac_liq, x }; });
+  return `<div class="panel cacdet">
+    <div class="row"><h3 style="margin:0">${PNOME[p]} · ${per.label}</h3>
+      <span class="pill">CAC Bruto ${fmtCac(t.cac_bruto)}</span><span class="pill">CAC Recebido ${fmtCac(t.cac_liq)}</span>
+      <span class="spacer"></span><button class="link small" data-tab-go="${p}">Abrir DRE ${PNOME[p]}</button></div>
+    <div class="cacdet-grid">
+      <div class="tbl-wrap"><table class="comp"><thead><tr><th>Composição</th><th>R$</th><th>% do contrato</th></tr></thead><tbody>${comp}</tbody></table></div>
+      <div class="stack" style="gap:8px;min-width:0">
+        <div class="row"><b class="small">Evolução mensal</b><span class="spacer"></span>
+          <div class="chips" role="group" aria-label="Indicador do gráfico"><button class="chip" data-cacmodo="bruto" aria-pressed="${modo==='bruto'}">CAC Bruto</button><button class="chip" data-cacmodo="liq" aria-pressed="${modo==='liq'}">CAC Recebido</button></div></div>
+        ${graficoCAC(dados)}
+      </div>
+    </div></div>`;
+}
+function graficoCAC(dados){
+  if (!dados.length) return '<div class="empty">Sem meses no período.</div>';
+  const W = 560, H = 220, padL = 44, padR = 8, padT = 12, padB = 26;
+  const vals = dados.map(d => Math.abs(d.v));
+  let max = Math.max(0.01, ...vals); const step = max > 0.5 ? 0.1 : max > 0.2 ? 0.05 : max > 0.08 ? 0.02 : 0.01; max = Math.ceil(max / step) * step;
+  const iw = W - padL - padR, ih = H - padT - padB, bw = iw / dados.length;
+  const barW = Math.max(6, Math.min(34, bw * 0.6));
+  const y = v => padT + ih - (v / max) * ih;
+  let g = '';
+  for (let v = 0; v <= max + 1e-9; v += step) g += `<line x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}" class="gl"/><text x="${padL - 6}" y="${y(v) + 4}" class="ax" text-anchor="end">${(-v * 100).toFixed(0)}%</text>`;
+  const ultimo = dados.length - 1;
+  dados.forEach((d, i) => {
+    const cx = padL + bw * i + bw / 2, v = Math.abs(d.v), top = y(v), h = Math.max(0, padT + ih - top);
+    const r = Math.min(4, h / 2, barW / 2);
+    const path = h > 0 ? `M${cx - barW/2},${padT + ih} V${top + r} Q${cx - barW/2},${top} ${cx - barW/2 + r},${top} H${cx + barW/2 - r} Q${cx + barW/2},${top} ${cx + barW/2},${top + r} V${padT + ih} Z` : '';
+    g += `<g class="bar" data-tip="${i}"><rect x="${padL + bw * i}" y="${padT}" width="${bw}" height="${ih}" fill="transparent"/>${path ? `<path d="${path}" class="bm ${i === ultimo ? 'last' : ''}"/>` : ''}</g>`;
+    if (dados.length <= 12 || i % Math.ceil(dados.length / 12) === 0) g += `<text x="${cx}" y="${H - 8}" class="ax" text-anchor="middle">${mesLabel(d.m)}</text>`;
+  });
+  g += `<text x="${padL + bw * ultimo + bw / 2}" y="${y(Math.abs(dados[ultimo].v)) - 5}" class="lbl" text-anchor="middle">${fmtCac(dados[ultimo].v)}</text>`;
+  S._tip = dados;
+  return `<div class="chart" id="cac-chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="CAC mensal">${g}<line x1="${padL}" x2="${W - padR}" y1="${padT + ih}" y2="${padT + ih}" class="base"/></svg><div class="tip" id="cac-tip" hidden></div></div>`;
+}
+
+function parceirosSemRegra(){
+  const conhecidos = new Set(regras().map(r => norm(r.parceiro)));
+  const s = new Set();
+  for (const d of S.desp) if (!conhecidos.has(norm(d[2]))) s.add(d[2]);
+  return [...s];
+}
+
+// ---------------- Base de vendas ----------------
+const BD_COLS = ['cod_venda','des_email','nme_plano','cod_oferta','nme_oferta','vlr_contrato','vlr_quitado','vlr_receber','vlr_devolvido','vlr_cancelado_calculado','nme_evento_lancamento','dta_venda_utc_ajustada','nme_produto_agrupado','nme_status_venda','cod_vendedor','nme_vendedor','nme_condicao_pagamento','time'];
+const NOVAS_DESDE = '2025-08'; // vendas novas só entram na base a partir deste mês
+// Vlr contrato travado: FL (FL e FL + FIA) com venda de ago/25 a jan/26 não tem o contrato atualizado
+const TRAVA_CONTRATO = { produtos: ['fl','fl + fia'], de: '2025-08', ate: '2026-01' };
+const contratoTravado = r => TRAVA_CONTRATO.produtos.includes(norm(r[12])) && String(r[11]).slice(0,7) >= TRAVA_CONTRATO.de && String(r[11]).slice(0,7) <= TRAVA_CONTRATO.ate;
+// Vlr receber é sempre calculado: Vlr contrato − Vlr quitado
+const calcReceber = r => Math.round(((+r[5]||0) - (+r[6]||0))*100)/100;
+const BD_UPD = [['vlr_contrato',5,'Vlr contrato'],['vlr_quitado',6,'Vlr quitado'],['vlr_cancelado_calculado',9,'Vlr cancelado']];
+const ALIAS = {
+  cod_venda:['cod_venda','codigo_venda','cod_de_venda','codigo_da_venda','cod_vend','cod'],
+  vlr_contrato:['vlr_contrato','valor_contrato','vlr_do_contrato'],
+  vlr_quitado:['vlr_quitado','valor_quitado'],
+  vlr_receber:['vlr_receber','valor_receber','vlr_a_receber','valor_a_receber'],
+  vlr_devolvido:['vlr_devolvido','valor_devolvido'],
+  vlr_cancelado_calculado:['vlr_cancelado_calculado','vlr_cancelado','valor_cancelado','vlr_cancelamento'],
+  dta_venda_utc_ajustada:['dta_venda_utc_ajustada','dta_venda','data_venda','data_da_venda'],
+  nme_produto_agrupado:['nme_produto_agrupado','produto_agrupado','produto'],
+  nme_status_venda:['nme_status_venda','status_venda','status'],
+  time:['time','equipe'],
+};
+function colMap(headers){
+  const h = headers.map(nk); const map = {};
+  for (const k of BD_COLS) { const al = ALIAS[k] || [k]; const i = h.findIndex(x => al.includes(x)); if (i >= 0) map[k] = i; }
+  return map;
+}
+const codKey = v => { if (v == null) return ''; let s = String(v).trim(); if (/^\d+\.0+$/.test(s)) s = s.replace(/\.0+$/,''); return s; };
+
+function viewBD(){
+  const rows = S.bd;
+  const q = norm(S.bdQ);
+  const prods = [...new Set(rows.map(r => r[12]))].filter(Boolean).sort();
+  const mesesB = [...new Set(rows.map(r => String(r[11]).slice(0,7)))].filter(Boolean).sort();
+  let f = rows;
+  if (S.bdProd) f = f.filter(r => r[12] === S.bdProd);
+  if (S.bdMes) f = f.filter(r => String(r[11]).startsWith(S.bdMes));
+  if (q) f = f.filter(r => norm(r[0]).includes(q) || norm(r[1]).includes(q) || norm(r[15]).includes(q) || norm(r[2]).includes(q) || norm(r[3]).includes(q) || norm(r[4]).includes(q));
+  const per = 100, pages = Math.max(1, Math.ceil(f.length / per)); if (S.bdPage >= pages) S.bdPage = 0;
+  const page = f.slice(S.bdPage*per, S.bdPage*per + per);
+  const tot = f.reduce((a,r)=>{a.c+=+r[5]||0;a.q+=+r[6]||0;a.x+=+r[9]||0;return a},{c:0,q:0,x:0});
+  // dinâmica por mês e produto (igual à aba DINAMICA BD VIOTT)
+  const piv = {};
+  for (const r of rows) { const m = String(r[11]).slice(0,7); const k = r[12]; const o = ((piv[m]=piv[m]||{})[k] = piv[m][k] || {n:0,c:0,q:0,a:0,x:0}); o.n++; o.c+=+r[5]||0; o.q+=+r[6]||0; o.a+=(+r[5]||0)-(+r[6]||0); o.x+=+r[9]||0; }
+  const pivProd = S.bdProd || '';
+  const pivRows = mesesB.map(m => { const vals = Object.entries(piv[m]||{}).filter(([k])=>!pivProd||k===pivProd).map(e=>e[1]); return [m, vals.reduce((a,o)=>({n:a.n+o.n,c:a.c+o.c,q:a.q+o.q,a:a.a+o.a,x:a.x+o.x}),{n:0,c:0,q:0,a:0,x:0})]; });
+  return `<div class="stack">
+  <div class="row"><h2>Base de vendas (BD Nova)</h2><span class="spacer"></span>
+    <div class="stats"><div class="stat"><b>${fmt0.format(rows.length)}</b><span>vendas na base</span></div>
+    <div class="stat"><b>${S.meta.bd ? new Date(S.meta.bd.atualizado).toLocaleDateString('pt-BR') : '—'}</b><span>última atualização</span></div></div></div>
+  ${S.canWrite ? uploadBD() : ''}
+  ${S.canWrite ? `<details class="panel"><summary class="small">Carga inicial / restaurar a partir do arquivo .json</summary><p class="muted small">Substitui vendas, comissões, despesas, ajustes manuais e regras pelo conteúdo do arquivo dre_comercial_dados.json.</p>${dropZone('json','Enviar dre_comercial_dados.json').replace('accept=".xlsx,.xls,.csv"','accept=".json"')}</details>` : ''}
+  <details class="panel"><summary>Resumo por mês ${pivProd?'· '+esc(pivProd):'· todos os produtos'} (mesma visão da tabela dinâmica)</summary>
+    <div class="tbl-wrap" style="margin-top:10px"><table><thead><tr><th>Mês da venda</th><th>Qtd</th><th>Receita contrato</th><th>Recebido (quitado)</th><th>A receber (contrato − quitado)</th><th>Cancelado</th></tr></thead><tbody>
+    ${pivRows.map(([m,o])=>`<tr><td>${mesLabel(m)}</td><td class="num">${fmt0.format(o.n)}</td><td class="num">${money2(o.c)}</td><td class="num">${money2(o.q)}</td><td class="num">${money2(o.a)}</td><td class="num">${money2(o.x)}</td></tr>`).join('')}
+    </tbody></table></div></details>
+  <div class="panel stack" style="gap:10px">
+    <div class="row">
+      <input id="bdq" type="search" placeholder="Buscar cód. de venda, e-mail, plano, oferta ou vendedor" value="${esc(S.bdQ)}" style="flex:1;min-width:220px">
+      <select id="bdprod"><option value="">Todos os produtos</option>${prods.map(p=>`<option ${S.bdProd===p?'selected':''}>${esc(p)}</option>`).join('')}</select>
+      <select id="bdmes"><option value="">Todos os meses</option>${mesesB.map(m=>`<option value="${m}" ${S.bdMes===m?'selected':''}>${mesLabel(m)}</option>`).join('')}</select>
+    </div>
+    <div class="muted small">${fmt0.format(f.length)} vendas · contrato ${money2(tot.c)} · quitado ${money2(tot.q)} · cancelado ${money2(tot.x)}</div>
+    <div class="tbl-wrap"><table><thead><tr><th>Cód. venda</th><th style="text-align:left">des_email</th><th style="text-align:left">nme_plano</th><th style="text-align:left">cod_oferta</th><th style="text-align:left">nme_oferta</th><th style="text-align:left">Data</th><th style="text-align:left">Produto</th><th style="text-align:left">Status</th><th style="text-align:left">Vendedor</th><th style="text-align:left">Time</th><th>Vlr contrato</th><th>Vlr quitado</th><th>Vlr receber</th><th>Vlr cancelado</th></tr></thead><tbody>
+    ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[15])}</td><td>${esc(r[17])}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="14" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
+    </tbody></table></div>
+    <div class="pager"><button class="btn" data-act="bdprev" ${S.bdPage===0?'disabled':''}>Anterior</button><span>Página ${S.bdPage+1} de ${pages}</span><button class="btn" data-act="bdnext" ${S.bdPage>=pages-1?'disabled':''}>Próxima</button></div>
+  </div></div>`;
+}
+
+function dropZone(id, texto){
+  return `<label class="drop" id="drop-${id}" for="file-${id}"><b>${texto}</b><br><span class="muted small">Arraste o arquivo .xlsx ou .csv aqui ou clique para escolher</span>
+  <input type="file" id="file-${id}" data-up="${id}" accept=".xlsx,.xls,.csv" hidden></label>`;
+}
+
+function uploadBD(){
+  const u = S.up.bd;
+  let prev = '';
+  if (u && u.erro) prev = `<div class="note">${esc(u.erro)}</div>`;
+  else if (u && u.prev) {
+    const p = u.prev;
+    prev = `<div class="stack" style="gap:10px">
+      <div class="row"><b>${esc(u.nome)}</b><span class="muted small">${fmt0.format(p.linhas)} linhas lidas · colunas atualizadas: ${p.cols.map(c=>c[2]).join(', ')}</span></div>
+      <div class="stats">
+        <div class="stat"><b class="ok">${fmt0.format(p.alteradas.length)}</b><span>vendas com valores alterados</span></div>
+        <div class="stat"><b>${fmt0.format(p.iguais)}</b><span>encontradas sem alteração</span></div>
+        <div class="stat"><b style="color:var(--warn)">${fmt0.format(p.novas.length)}</b><span>cód. não encontrados na base</span></div>
+        ${p.dup ? `<div class="stat"><b>${fmt0.format(p.dup)}</b><span>cód. repetidos no arquivo (vale a última linha)</span></div>`:''}
+      </div>
+      ${p.alteradas.length ? `<div class="tbl-wrap"><table><thead><tr><th>Coluna</th><th>Antes (vendas alteradas)</th><th>Depois</th><th>Diferença</th></tr></thead><tbody>
+        ${p.cols.map(([k,i,lab])=>{const a=p.alteradas.reduce((s,x)=>s+(+x.antes[i]||0),0), d=p.alteradas.reduce((s,x)=>s+(+x.depois[i]||0),0); return `<tr><td>${lab}</td><td class="num">${money2(a)}</td><td class="num">${money2(d)}</td><td class="num ${d-a<0?'neg':''}">${money2(d-a)}</td></tr>`}).join('')}
+      </tbody></table></div>
+      <details><summary>Ver as primeiras ${Math.min(50,p.alteradas.length)} vendas alteradas</summary><div class="tbl-wrap" style="margin-top:8px"><table><thead><tr><th>Cód. venda</th><th style="text-align:left">Produto</th>${p.cols.map(c=>`<th>${c[2]}</th>`).join('')}</tr></thead><tbody>
+        ${p.alteradas.slice(0,50).map(x=>`<tr><td>${esc(x.antes[0])}</td><td>${esc(x.antes[12])}</td>${p.cols.map(([k,i])=>{const a=+x.antes[i]||0,d=+x.depois[i]||0;return `<td class="num">${Math.abs(a-d)>0.004?`<span class="muted">${money2(a)}</span> → <b>${money2(d)}</b>`:money2(d)}</td>`}).join('')}</tr>`).join('')}
+      </tbody></table></div></details>`:''}
+      ${p.cols.some(c=>c[1]===5) ? `<div class="note">Vlr contrato <b>não é atualizado</b> nas vendas do FL (FL e FL + FIA) de ${mesLabel(TRAVA_CONTRATO.de)} a ${mesLabel(TRAVA_CONTRATO.ate)}${p.travadas?`: <b>${fmt0.format(p.travadas)}</b> venda(s) do arquivo tinham contrato diferente e mantiveram o valor atual`:''}. As outras colunas dessas vendas são atualizadas normalmente.</div>`:''}
+      ${p.novas.length ? `<div class="note">${fmt0.format(p.novas.length)} código(s) do arquivo não existem na base: ${p.novas.slice(0,12).map(n=>esc(n.cod)).join(', ')}${p.novas.length>12?'…':''}.
+        ${p.podeIncluir ? novasUI(u, p) : `<br>Elas serão ignoradas. Para incluí-las, o arquivo precisa ter também as colunas <i>dta_venda_utc_ajustada</i> e <i>nme_produto_agrupado</i> (só entram vendas a partir de ${mesLabel(NOVAS_DESDE)}).`}</div>`:''}
+      ${p.temStatus ? `<label class="row small"><input type="checkbox" id="bd-status" ${u.status?'checked':''}> Atualizar também o status da venda (nme_status_venda)</label>`:''}
+      <div class="row"><button class="btn pri" data-act="bdaplicar" ${(!p.alteradas.length && !(u.incluir&&novasElegiveis(u,p).length) && !(u.status&&p.statusMuda))?'disabled':''}>Aplicar atualização na base</button><button class="btn" data-act="upcancel" data-id="bd">Cancelar</button></div>
+    </div>`;
+  }
+  return `<div class="panel stack" style="gap:12px">
+    <div class="row"><h3 style="margin:0">Atualizar valores das vendas</h3><span class="spacer"></span><button class="btn" data-act="modelo" data-m="bd">Baixar modelo</button></div>
+    <p class="muted small" style="margin:0">O arquivo precisa ter a coluna <b>cod_venda</b> e uma ou mais destas: vlr_contrato, vlr_quitado, vlr_cancelado (ou vlr_cancelado_calculado). Cada venda é localizada pelo código e só essas colunas são substituídas. A coluna vlr_devolvido é desconsiderada. O <b>Vlr receber</b> não vem do arquivo: é sempre calculado como Vlr contrato − Vlr quitado. Você confere o resultado antes de aplicar.</p>
+    ${u && u.prev ? '' : dropZone('bd','Enviar arquivo de atualização')}
+    ${prev}
+    <details><summary class="small">Substituir a base inteira</summary><p class="muted small">Use quando quiser trocar todas as vendas por um arquivo completo com as mesmas colunas da aba BD NOVA (cod_venda até Time). As vendas atuais serão apagadas.</p>${dropZone('bdfull','Enviar base completa')}</details>
+  </div>`;
+}
+
+function novasElegiveis(u, p){ return p.novas.filter(n => n.mes && n.mes >= NOVAS_DESDE); }
+function novasUI(u, p){
+  const eleg = novasElegiveis(u, p).length;
+  const antes = p.novas.filter(n => n.mes && n.mes < NOVAS_DESDE).length;
+  const semData = p.novas.filter(n => !n.mes).length;
+  return `<div class="stack" style="gap:8px;margin-top:8px">
+    <span class="small">Vendas novas só entram na base a partir de <b>${mesLabel(NOVAS_DESDE)}</b> (pela data da venda): <b>${fmt0.format(eleg)}</b> podem ser incluídas${antes?`; <b>${fmt0.format(antes)}</b> são de antes de ${mesLabel(NOVAS_DESDE)} e ficam de fora`:''}${semData?`; <b>${fmt0.format(semData)}</b> sem data da venda ficam de fora`:''}.</span>
+    ${eleg ? `<label class="row"><input type="checkbox" id="bd-incluir" ${u.incluir?'checked':''}> Incluir as ${fmt0.format(eleg)} vendas novas na base</label>` : ''}
+  </div>`;
+}
+
+// ---------------- Despesas ----------------
+const DESP_H = ['EMPRESA','Data Baixa','Nome Parceiro (Parceiro)','Vlr Baixa','Histórico','Centro de Custo','Centro de Resultado','Competência (opcional, AAAA-MM)'];
+function viewDesp(){
+  const meses = [...new Set(S.desp.map(d => d[7] || String(d[1]).slice(0,7)))].sort();
+  let f = S.desp.map((d,i)=>[d,i]);
+  if (S.despMes) f = f.filter(([d]) => (d[7] || String(d[1]).slice(0,7)) === S.despMes);
+  const total = f.reduce((s,[d])=>s+(+d[3]||0),0);
+  const semRegra = new Set(parceirosSemRegra().map(norm));
+  return `<div class="stack">
+  <div class="row"><h2>Despesas gerais</h2><span class="spacer"></span><div class="stats"><div class="stat"><b>${fmt0.format(S.desp.length)}</b><span>lançamentos</span></div></div></div>
+  ${S.canWrite ? uploadGen('desp','Enviar despesas gerais', `Colunas: EMPRESA, Data Baixa, Nome Parceiro (Parceiro), Vlr Baixa, Histórico, Centro de Custo, Centro de Resultado. Opcional: <b>Competência</b> (AAAA-MM) quando o mês da DRE for diferente do mês da baixa. O nome do parceiro precisa ser igual ao das regras em Parâmetros.`) : ''}
+  <div class="panel stack" style="gap:10px">
+    <div class="row"><select id="despmes"><option value="">Todos os meses</option>${meses.map(m=>`<option value="${m}" ${S.despMes===m?'selected':''}>${mesLabel(m)}</option>`).join('')}</select><span class="muted small">${fmt0.format(f.length)} lançamentos · ${money2(total)}</span></div>
+    <div class="tbl-wrap"><table><thead><tr><th style="text-align:left">Empresa</th><th style="text-align:left">Data baixa</th><th style="text-align:left">Mês DRE</th><th style="text-align:left">Parceiro</th><th>Vlr baixa</th><th style="text-align:left">Histórico</th><th style="text-align:left">Centro de custo</th>${S.canWrite?'<th></th>':''}</tr></thead><tbody>
+    ${f.map(([d,i])=>`<tr><td>${esc(d[0])}</td><td>${esc(String(d[1]).split('-').reverse().join('/'))}</td><td>${mesLabel(d[7]||String(d[1]).slice(0,7))}${d[7]?' <span class="pill warn">ajustado</span>':''}</td><td>${esc(d[2])}${semRegra.has(norm(d[2]))?' <span class="pill warn">sem regra</span>':''}</td><td class="num">${money2(d[3])}</td><td style="white-space:normal;min-width:240px">${esc(d[4])}</td><td>${esc(d[5])}</td>${S.canWrite?`<td><button class="btn danger" data-act="despdel" data-i="${i}" aria-label="Excluir lançamento">Excluir</button></td>`:''}</tr>`).join('') || `<tr><td colspan="8" class="empty">Nenhuma despesa carregada. Envie o arquivo acima.</td></tr>`}
+    </tbody></table></div></div></div>`;
+}
+
+// ---------------- Comissões ----------------
+const COM_H = ['MÊS COMERCIAL','TIPO','Função','EMPRESA','FIXO','COMISSÃO INSIDER','Bônus VA Mês Comercial','BÔNUS TOP 3 IMLS','BÔNUS CONSOLIDADO','LEVANTADA DE MÃO INSIDER','COMISSÃO SUPERVISOR INSIDER','COMISSÃO INGRESSOS','COMISSÃO SUPERVISOR INGRESSOS','COMISSÃO VENDEDOR (FL)','LEVANTADA DE MÃO FL','COMISSÃO SUPERVISOR (FL)','COMISSÃO VENDEDOR (PLAT)','COMISSÃO SUPERVISOR (PLAT)'];
+function viewCom(){
+  const meses = [...new Set(S.com.map(r=>r[0]))].sort();
+  const mes = S.comMes || meses[meses.length-1] || '';
+  const f = S.com.filter(r => !mes || r[0] === mes);
+  // resumo por tipo
+  const res = {};
+  for (const r of f) { const k = r[1]+' · '+r[2]; const o = res[k] = res[k] || {n:0,fixo:0,vari:0}; o.n++; o.fixo += +r[4]||0; for (let i=5;i<18;i++) if (i!==6 && i!==7) o.vari += +r[i]||0; }
+  return `<div class="stack">
+  <div class="row"><h2>Comissões · Time comercial</h2><span class="spacer"></span><div class="stats"><div class="stat"><b>${fmt0.format(S.com.length)}</b><span>linhas</span></div><div class="stat"><b>${meses.length}</b><span>meses comerciais</span></div></div></div>
+  ${S.canWrite ? uploadGen('com','Enviar comissões do mês', `Mesmo layout da aba COMISSÕES – Time Comercial, colunas A até R na ordem: ${COM_H.map(esc).join(', ')}. As colunas são lidas pela posição. Bônus consolidado vazio = Bônus VA + Top 3.`) : ''}
+  <div class="panel stack" style="gap:10px">
+    <div class="row"><select id="commes">${meses.map(m=>`<option value="${m}" ${mes===m?'selected':''}>${mesLabel(m)}</option>`).join('')}</select>
+      <span class="muted small">${fmt0.format(f.length)} pessoas no mês</span><span class="spacer"></span>
+      ${S.canWrite && mes ? `<button class="btn danger" data-act="comdelmes" data-m="${mes}">Excluir o mês ${mesLabel(mes)}</button>`:''}</div>
+    <div class="tbl-wrap"><table><thead><tr><th style="text-align:left">Tipo · Função</th><th>Pessoas</th><th>Fixo</th><th>Variável + bônus</th></tr></thead><tbody>
+      ${Object.entries(res).sort().map(([k,o])=>`<tr><td>${esc(k)}</td><td class="num">${o.n}</td><td class="num">${money2(o.fixo)}</td><td class="num">${money2(o.vari)}</td></tr>`).join('') || `<tr><td colspan="4" class="empty">Nenhuma comissão carregada.</td></tr>`}
+    </tbody></table></div>
+    <details><summary>Ver linhas do mês</summary><div class="tbl-wrap" style="margin-top:8px"><table><thead><tr>${COM_H.map((h,i)=>`<th ${i<4?'style="text-align:left"':''}>${esc(h)}</th>`).join('')}</tr></thead><tbody>
+      ${f.map(r=>`<tr>${r.map((v,i)=> i===0?`<td>${mesLabel(v)}</td>`: i<4?`<td>${esc(v)}</td>`:`<td class="num">${money2(v)}</td>`).join('')}</tr>`).join('')}
+    </tbody></table></div></details>
+  </div></div>`;
+}
+
+function uploadGen(id, titulo, ajuda){
+  const u = S.up[id];
+  let prev = '';
+  if (u && u.erro) prev = `<div class="note">${esc(u.erro)}</div>`;
+  else if (u && u.prev) {
+    const p = u.prev;
+    prev = `<div class="stack" style="gap:10px">
+      <div class="row"><b>${esc(u.nome)}</b><span class="muted small">${fmt0.format(p.rows.length)} linhas válidas${p.ignoradas?` · ${p.ignoradas} ignoradas (sem data/mês ou sem nome)`:''} · meses: ${p.meses.map(mesLabel).join(', ')} · total ${money2(p.total)}</span></div>
+      <div class="row small" role="radiogroup" aria-label="Modo de importação">
+        <label class="row"><input type="radio" name="modo-${id}" value="meses" ${u.modo==='meses'?'checked':''}> Substituir só os meses do arquivo</label>
+        <label class="row"><input type="radio" name="modo-${id}" value="add" ${u.modo==='add'?'checked':''}> Acrescentar às linhas atuais</label>
+        <label class="row"><input type="radio" name="modo-${id}" value="tudo" ${u.modo==='tudo'?'checked':''}> Substituir tudo</label>
+      </div>
+      ${p.aviso ? `<div class="note">${p.aviso}</div>`:''}
+      <div class="row"><button class="btn pri" data-act="genaplicar" data-id="${id}">Importar</button><button class="btn" data-act="upcancel" data-id="${id}">Cancelar</button></div></div>`;
+  }
+  return `<div class="panel stack" style="gap:12px">
+    <div class="row"><h3 style="margin:0">${titulo}</h3><span class="spacer"></span><button class="btn" data-act="modelo" data-m="${id}">Baixar modelo</button></div>
+    <p class="muted small" style="margin:0">${ajuda}</p>
+    ${u && u.prev ? '' : dropZone(id, titulo)}
+    ${prev}</div>`;
+}
+
+// ---------------- Ajustes manuais ----------------
+function linhasEditaveis(p){ return S.res[p].linhas.filter(l => l.t !== 'p' && !l.ratio); }
+function viewAjustes(){
+  const lab = {}; for (const p of PRODS) for (const l of S.res[p].linhas) lab[p+'|'+l.key] = l.label;
+  const itens = S.manual.map((e,i)=>[e,i]).filter(([e]) => !S.ajProd || e.prod === S.ajProd).sort((a,b)=> (a[0].prod+a[0].mes+a[0].key).localeCompare(b[0].prod+b[0].mes+b[0].key));
+  const meses = S.res.INSIDER.meses;
+  const pSel = S.ajNovoProd || 'INSIDER';
+  return `<div class="stack">
+  <div class="row"><h2>Ajustes manuais</h2></div>
+  <p class="muted" style="margin:0;max-width:75ch">Valores digitados que substituem o cálculo da linha naquele mês: Diretor (variável e fixo), Distrato, Fixo 30 dias e qualquer correção pontual. Use valores negativos para despesas, como na planilha.</p>
+  ${S.canWrite ? `<div class="panel row" style="align-items:flex-end">
+    <label class="f">Produto<select id="aj-prod">${PRODS.map(p=>`<option value="${p}" ${pSel===p?'selected':''}>${PNOME[p]}</option>`).join('')}</select></label>
+    <label class="f" style="flex:1;min-width:200px">Linha da DRE<select id="aj-key">${linhasEditaveis(pSel).map(l=>`<option value="${l.key}">${esc(l.label)}${MANUAIS[pSel].includes(l.key)?' (manual)':''}</option>`).join('')}</select></label>
+    <label class="f">Mês<select id="aj-mes">${meses.map(m=>`<option value="${m}" ${m===meses[meses.length-1]?'selected':''}>${mesLabel(m)}</option>`).join('')}</select></label>
+    <label class="f">Valor (R$)<input id="aj-valor" inputmode="decimal" placeholder="-40.000,00" style="width:140px"></label>
+    <label class="f" style="flex:1;min-width:160px">Observação<input id="aj-obs" placeholder="opcional"></label>
+    <button class="btn pri" data-act="ajadd">Salvar ajuste</button></div>` : ''}
+  <div class="panel stack" style="gap:10px">
+    <div class="chips">${['',...PRODS].map(p=>`<button class="chip" data-ajf="${p}" aria-pressed="${S.ajProd===p}">${p?PNOME[p]:'Todos'}</button>`).join('')}</div>
+    <div class="tbl-wrap"><table><thead><tr><th style="text-align:left">Produto</th><th style="text-align:left">Linha</th><th style="text-align:left">Mês</th><th>Valor</th><th style="text-align:left">Observação</th>${S.canWrite?'<th></th>':''}</tr></thead><tbody>
+    ${itens.map(([e,i])=>`<tr><td>${PNOME[e.prod]||esc(e.prod)}</td><td>${esc(lab[e.prod+'|'+e.key]||e.key)}</td><td>${mesLabel(e.mes)}</td><td class="num ${e.valor<0?'neg':''}">${money2(e.valor)}</td><td>${esc(e.obs||'')}</td>${S.canWrite?`<td><button class="btn danger" data-act="ajdel" data-i="${i}">Excluir</button></td>`:''}</tr>`).join('') || `<tr><td colspan="6" class="empty">Nenhum ajuste lançado.</td></tr>`}
+    </tbody></table></div></div></div>`;
+}
+
+// ---------------- Parâmetros ----------------
+const PARAM_LAB = { proj:'% Projeção Receita Bruta (sobre contrato − recebido + cancelado)', gmail:'G-mail por pessoa (R$/mês)', slack:'Slack por pessoa (R$/mês)', irpj:'Alíquota IRPJ (sobre 32% do recebido)', csll:'Alíquota CSLL (sobre 32% do recebido)' };
+const SECOES = { ads:'Online Ads', pessoal:'Despesa com Pessoal', gerais:'Despesas Gerais', servicos:'Despesa com Serviços' };
+function viewParams(){
+  const rg = S.regrasEdit || regras();
+  let ph = '';
+  for (const p of PRODS) {
+    const pr = Object.assign({}, DRE.PARAMS_PADRAO[p], S.params[p]||{});
+    ph += `<div class="panel stack" style="gap:8px"><h3>${PNOME[p]}</h3>${Object.keys(DRE.PARAMS_PADRAO[p]).map(k=>`<label class="f">${PARAM_LAB[k]}<input data-param="${p}|${k}" value="${esc(String(pr[k]).replace('.',','))}" inputmode="decimal" ${S.canWrite?'':'disabled'}></label>`).join('')}</div>`;
+  }
+  return `<div class="stack">
+  <div class="row"><h2>Parâmetros</h2><span class="spacer"></span>${S.canWrite?'<button class="btn pri" data-act="paramsalvar">Salvar parâmetros</button>':''}</div>
+  <div class="grid2">${ph}</div>
+  <div class="panel stack" style="gap:10px">
+    <div class="row"><h3 style="margin:0">Regras de despesas gerais por produto</h3><span class="spacer"></span>${S.canWrite?`<button class="btn" data-act="regraadd">Adicionar regra</button><button class="btn" data-act="regrapadrao">Restaurar padrão da planilha</button><button class="btn pri" data-act="regrasalvar">Salvar regras</button>`:''}</div>
+    <p class="muted small" style="margin:0;max-width:90ch">Cada regra leva despesas da aba Despesas gerais para uma linha da DRE: soma o Vlr Baixa do parceiro no mês, filtra pela empresa (vazio = todas), multiplica pelo % de rateio e lança como despesa. A vigência limita os meses em que a regra vale (vazio = sempre). Ex.: CLINT 90% Insider e 10% FL a partir de jan/26.</p>
+    <div class="tbl-wrap"><table><thead><tr><th style="text-align:left">Produto</th><th style="text-align:left">Grupo na DRE</th><th style="text-align:left">Parceiro (igual ao da despesa)</th><th style="text-align:left">Empresa</th><th style="text-align:left">% rateio</th><th style="text-align:left">De (AAAA-MM)</th><th style="text-align:left">Até (AAAA-MM)</th>${S.canWrite?'<th></th>':''}</tr></thead><tbody>
+    ${rg.map((r,i)=>`<tr>
+      <td><select data-rg="${i}|prod" ${S.canWrite?'':'disabled'}>${PRODS.map(p=>`<option value="${p}" ${r.prod===p?'selected':''}>${PNOME[p]}</option>`).join('')}</select></td>
+      <td><select data-rg="${i}|secao" ${S.canWrite?'':'disabled'}>${Object.entries(SECOES).map(([k,v])=>`<option value="${k}" ${r.secao===k?'selected':''}>${v}</option>`).join('')}</select></td>
+      <td style="min-width:260px"><input data-rg="${i}|parceiro" value="${esc(r.parceiro)}" list="parceiros" ${S.canWrite?'':'disabled'}></td>
+      <td style="width:90px"><input data-rg="${i}|empresa" value="${esc(r.empresa)}" ${S.canWrite?'':'disabled'}></td>
+      <td style="width:90px"><input data-rg="${i}|pct" value="${esc(String(+(r.pct*100).toFixed(4)).replace('.',','))}%" ${S.canWrite?'':'disabled'}></td>
+      <td style="width:110px"><input data-rg="${i}|de" value="${esc(r.de)}" placeholder="—" ${S.canWrite?'':'disabled'}></td>
+      <td style="width:110px"><input data-rg="${i}|ate" value="${esc(r.ate)}" placeholder="—" ${S.canWrite?'':'disabled'}></td>
+      ${S.canWrite?`<td><button class="btn danger" data-act="regradel" data-i="${i}">Remover</button></td>`:''}</tr>`).join('')}
+    </tbody></table></div>
+    <datalist id="parceiros">${[...new Set(S.desp.map(d=>d[2]))].sort().map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+    <p class="muted small" style="margin:0">Despesas da Ingressos: G-mail e Slack (por headcount) e 3C Plus. A Plat não tem despesas administrativas automáticas; use Ajustes manuais na linha "Lançamentos administrativos".</p>
+  </div></div>`;
+}
+
+// ---------------- leitura de arquivos ----------------
+function parseNum(v){
+  if (v == null || v === '') return 0;
+  if (typeof v === 'number') return v;
+  let s = String(v).replace(/R\$|\s/g,'').replace(/%$/,'');
+  if (!s) return 0;
+  const neg = /^\(.*\)$/.test(s); s = s.replace(/[()]/g,'');
+  if (s.includes(',') && s.includes('.')) { if (s.lastIndexOf(',') > s.lastIndexOf('.')) s = s.replace(/\./g,'').replace(',','.'); else s = s.replace(/,/g,''); }
+  else if (s.includes(',')) s = s.replace(/\./g,'').replace(',','.');
+  const n = parseFloat(s); return isNaN(n) ? 0 : (neg ? -n : n);
+}
+function pad2(n){ return String(n).padStart(2,'0'); }
+function parseDate(v){
+  if (v == null || v === '') return '';
+  if (v instanceof Date && !isNaN(v)) return v.getFullYear()+'-'+pad2(v.getMonth()+1)+'-'+pad2(v.getDate());
+  if (typeof v === 'number') { const d = XLSX.SSF.parse_date_code(v); if (d) return d.y+'-'+pad2(d.m)+'-'+pad2(d.d); }
+  const s = String(v).trim(); let m;
+  if ((m = s.match(/^(\d{4})-(\d{1,2})(?:-(\d{1,2}))?/))) return m[1]+'-'+pad2(m[2])+'-'+pad2(m[3]||1);
+  if ((m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/))) { const y = m[3].length===2 ? '20'+m[3] : m[3]; return y+'-'+pad2(m[2])+'-'+pad2(m[1]); }
+  if ((m = s.match(/^(\d{1,2})[\/-](\d{4})$/))) return m[2]+'-'+pad2(m[1])+'-01';
+  if ((m = s.match(/^(\d{1,2})[\/-](\d{2})$/))) return '20'+m[2]+'-'+pad2(m[1])+'-01';
+  // mês por extenso ou abreviado: "ago./26", "ago/2026", "agosto de 2026", "Aug-26"
+  if ((m = norm(s).match(/^([a-z]{3})[a-z]*\.?[\s\/\-_.]*(?:de\s*)?(\d{2}|\d{4})$/))) {
+    const MES = {jan:1,fev:2,feb:2,mar:3,abr:4,apr:4,mai:5,may:5,jun:6,jul:7,ago:8,aug:8,set:9,sep:9,out:10,oct:10,nov:11,dez:12,dec:12};
+    if (MES[m[1]]) return (m[2].length===2 ? '20'+m[2] : m[2]) + '-' + pad2(MES[m[1]]) + '-01';
+  }
+  return '';
+}
+function readFile(file){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => { try {
+      const wb = XLSX.read(new Uint8Array(fr.result), { type:'array', cellDates:true });
+      const sheets = wb.SheetNames.map(n => ({ nome:n, aoa: XLSX.utils.sheet_to_json(wb.Sheets[n], { header:1, raw:true, defval:'' }) }));
+      res(sheets);
+    } catch(e) { rej(e); } };
+    fr.onerror = () => rej(fr.error);
+    fr.readAsArrayBuffer(file);
+  });
+}
+// encontra a aba e a linha de cabeçalho que contém uma coluna-chave
+function acharCabecalho(sheets, testes){
+  for (const sh of sheets) for (let i = 0; i < Math.min(15, sh.aoa.length); i++) {
+    const h = sh.aoa[i].map(nk);
+    if (testes(h)) return { sh, i, h };
+  }
+  return null;
+}
+
+async function onFile(id, file){
+  S.up[id] = { nome: file.name };
+  try {
+    const sheets = await readFile(file);
+    if (id === 'bd') prepBD(sheets);
+    else if (id === 'bdfull') prepBDFull(sheets);
+    else if (id === 'desp') prepDesp(sheets);
+    else if (id === 'com') prepCom(sheets);
+  } catch(e) { S.up[id] = { nome: file.name, erro: 'Não consegui ler esse arquivo. Envie um .xlsx ou .csv. (' + (e.message||e) + ')' }; }
+  render();
+}
+
+function prepBD(sheets){
+  const u = S.up.bd;
+  const c = acharCabecalho(sheets, h => h.some(x => ALIAS.cod_venda.includes(x)));
+  if (!c) { u.erro = 'Não encontrei a coluna cod_venda no arquivo.'; return; }
+  const map = colMap(c.sh.aoa[c.i]);
+  const cols = BD_UPD.filter(([k]) => k in map);
+  const colsVer = cols.concat([['vlr_receber',7,'Vlr receber (contrato − quitado)']]);
+  if (!cols.length) { u.erro = 'O arquivo tem cod_venda, mas nenhuma das colunas de valor (vlr_contrato, vlr_quitado, vlr_cancelado).'; return; }
+  const base = new Map(S.bd.map((r,i) => [codKey(r[0]), i]));
+  const porCod = new Map(); let dup = 0, linhas = 0;
+  for (const row of c.sh.aoa.slice(c.i+1)) {
+    const cod = codKey(row[map.cod_venda]); if (!cod) continue; linhas++;
+    if (porCod.has(cod)) dup++;
+    porCod.set(cod, row);
+  }
+  const alteradas = [], novas = []; let iguais = 0, statusMuda = 0, travadas = 0;
+  const temStatus = 'nme_status_venda' in map;
+  for (const [cod, row] of porCod) {
+    const i = base.get(cod);
+    if (i == null) { novas.push({ cod, row }); continue; }
+    const antes = S.bd[i]; const depois = antes.slice();
+    let mudou = false; const trava = contratoTravado(antes);
+    for (const [k, pos] of cols) { if (pos === 5 && trava) { const v0 = Math.round(parseNum(row[map[k]])*100)/100; if (Math.abs(v0 - (+antes[5]||0)) > 0.004) travadas++; continue; } const v = Math.round(parseNum(row[map[k]])*100)/100; if (Math.abs(v - (+antes[pos]||0)) > 0.004) { depois[pos] = v; mudou = true; } }
+    if (temStatus) { const st = String(row[map.nme_status_venda]||'').trim(); if (st && st !== antes[13]) { statusMuda++; depois._st = st; } }
+    depois[7] = calcReceber(depois); if (Math.abs(depois[7] - (+antes[7]||0)) > 0.004) mudou = true;
+    if (mudou) alteradas.push({ i, antes, depois }); else iguais++;
+    if (!mudou && depois._st) alteradas.push({ i, antes, depois, soStatus: true });
+  }
+  const podeIncluir = ('dta_venda_utc_ajustada' in map) && ('nme_produto_agrupado' in map);
+  if (podeIncluir) for (const n of novas) n.mes = parseDate(n.row[map.dta_venda_utc_ajustada]).slice(0,7);
+  const mesesNovas = podeIncluir ? [...new Set(novas.map(n => n.mes).filter(Boolean))].sort() : [];
+  u.prev = { linhas, cols: colsVer, alteradas: alteradas.filter(a=>!a.soStatus), soStatus: alteradas.filter(a=>a.soStatus), novas, iguais, dup, podeIncluir, map, temStatus, statusMuda, mesesNovas, travadas };
+  u.incluir = podeIncluir && mesesNovas.some(m => m >= NOVAS_DESDE); u.status = false;
+  
+}
+
+function rowFromMap(row, map){
+  const r = [];
+  BD_COLS.forEach((k, j) => {
+    const v = k in map ? row[map[k]] : '';
+    if (j >= 5 && j <= 9) r.push(Math.round(parseNum(v)*100)/100);
+    else if (j === 11) r.push(parseDate(v));
+    else if (j === 0) r.push(codKey(v));
+    else r.push(v == null ? '' : String(v).trim());
+  });
+  r[7] = calcReceber(r);
+  return r;
+}
+
+async function aplicarBD(){
+  const u = S.up.bd, p = u.prev;
+  const rows = S.bd.slice();
+  for (const a of p.alteradas) { const d = a.depois.slice(); delete d._st; if (u.status && a.depois._st) d[13] = a.depois._st; rows[a.i] = d; }
+  if (u.status) for (const a of p.soStatus) { const d = a.antes.slice(); d[13] = a.depois._st; rows[a.i] = d; }
+  let inc = 0;
+  if (u.incluir && p.podeIncluir) for (const n of novasElegiveis(u, p)) { const r = rowFromMap(n.row, p.map); if (r[11] && r[12]) { rows.push(r); inc++; } }
+  const resumo = `${u.nome}: ${p.alteradas.length} vendas atualizadas${inc?`, ${inc} incluídas (a partir de ${mesLabel(NOVAS_DESDE)})`:''}${u.status&&p.statusMuda?`, ${p.statusMuda} status alterados`:''}`;
+  try { await saveDataset('bd', rows, resumo); S.up.bd = null; toast('Base atualizada: ' + resumo.split(': ')[1]); } catch(e) { writeErr(e); }
+  render();
+}
+
+function prepBDFull(sheets){
+  const u = S.up.bdfull;
+  const c = acharCabecalho(sheets, h => h.includes('cod_venda') && h.some(x => ALIAS.nme_produto_agrupado.includes(x)));
+  if (!c) { u.erro = 'Não encontrei as colunas cod_venda e nme_produto_agrupado.'; return; }
+  const map = colMap(c.sh.aoa[c.i]);
+  const falta = ['vlr_contrato','vlr_quitado','vlr_cancelado_calculado','dta_venda_utc_ajustada'].filter(k => !(k in map));
+  if (falta.length) { u.erro = 'Faltam colunas obrigatórias: ' + falta.join(', '); return; }
+  const rows = []; const seen = new Set(); let ign = 0;
+  for (const row of c.sh.aoa.slice(c.i+1)) { const r = rowFromMap(row, map); if (!r[0] || !r[11] || seen.has(r[0])) { if (r[0]) ign++; continue; } seen.add(r[0]); rows.push(r); }
+  S.up.bd = { nome: u.nome, full: rows, ign };
+  S.up.bdfull = null;
+  confirmar(`Substituir a base inteira?`, `As ${fmt0.format(S.bd.length)} vendas atuais serão trocadas pelas ${fmt0.format(rows.length)} do arquivo ${u.nome}${ign?` (${ign} linhas ignoradas por falta de data ou código repetido)`:''}.`, 'Substituir base', async () => {
+    try { await saveDataset('bd', rows, `${u.nome}: base completa substituída (${rows.length} vendas)`); toast('Base substituída'); } catch(e) { writeErr(e); }
+    S.up.bd = null; render();
+  }, () => { S.up.bd = null; render(); });
+}
+
+function prepDesp(sheets){
+  const u = S.up.desp;
+  const c = acharCabecalho(sheets, h => h.some(x => x.startsWith('nome_parceiro')) && h.some(x => x.startsWith('vlr_baixa')));
+  if (!c) { u.erro = 'Não encontrei as colunas "Nome Parceiro (Parceiro)" e "Vlr Baixa".'; return; }
+  const h = c.h; const ix = pre => h.findIndex(x => x.startsWith(pre));
+  const I = { emp: ix('empresa'), data: ix('data_baixa'), parc: ix('nome_parceiro'), vlr: ix('vlr_baixa'), hist: ix('historico'), cc: ix('centro_de_custo'), cr: ix('centro_de_resultado'), comp: ix('competencia') };
+  if (I.data < 0) { u.erro = 'Não encontrei a coluna "Data Baixa".'; return; }
+  const rows = []; let ign = 0;
+  for (const r of c.sh.aoa.slice(c.i+1)) {
+    const parc = String(r[I.parc]||'').trim(); const data = parseDate(r[I.data]);
+    if (!parc || !data) { if (parc || data) ign++; continue; }
+    let comp = I.comp >= 0 ? parseDate(r[I.comp]).slice(0,7) : '';
+    if (comp === data.slice(0,7)) comp = '';
+    const emp = I.emp >= 0 ? String(r[I.emp] ?? '').replace(/\.0+$/,'').trim() : '';
+    rows.push([emp, data, parc, Math.round(parseNum(r[I.vlr])*100)/100, I.hist>=0?String(r[I.hist]||''):'', I.cc>=0?String(r[I.cc]||''):'', I.cr>=0?String(r[I.cr]||''):'', comp]);
+  }
+  const meses = [...new Set(rows.map(r => r[7] || r[1].slice(0,7)))].sort();
+  const conhecidos = new Set(regras().map(r=>norm(r.parceiro)));
+  const sem = [...new Set(rows.filter(r=>!conhecidos.has(norm(r[2]))).map(r=>r[2]))];
+  u.prev = { rows, ignoradas: ign, meses, total: rows.reduce((s,r)=>s+r[3],0), aviso: sem.length ? `${sem.length} parceiro(s) sem regra de rateio não vão aparecer em nenhuma DRE até você criar a regra em Parâmetros: ${sem.slice(0,8).map(esc).join(', ')}${sem.length>8?'…':''}.` : '' };
+  u.modo = 'meses';
+}
+
+function prepCom(sheets){
+  const u = S.up.com;
+  const c = acharCabecalho(sheets, h => h.some(x => x === 'mes_comercial' || x === 'mes'));
+  if (!c) { u.erro = 'Não encontrei a coluna "MÊS COMERCIAL" na primeira linha de cabeçalho.'; return; }
+  const start = c.h.findIndex(x => x === 'mes_comercial' || x === 'mes');
+  const rows = []; let ign = 0;
+  for (const r0 of c.sh.aoa.slice(c.i+1)) {
+    const r = r0.slice(start, start+18);
+    const d = parseDate(r[0]); const tipo = String(r[1]||'').trim(), func = String(r[2]||'').trim();
+    if (!d || (!tipo && !func)) { if (d || tipo || func) ign++; continue; }
+    const nums = []; for (let k = 4; k < 18; k++) nums.push(Math.round(parseNum(r[k])*100)/100);
+    if ((r[8] === '' || r[8] == null)) nums[4] = Math.round((nums[2] + nums[3])*100)/100; // I = G + H
+    rows.push([d.slice(0,7), tipo, func, String(r[3]||'').trim(), ...nums]);
+  }
+  const meses = [...new Set(rows.map(r=>r[0]))].sort();
+  const total = rows.reduce((s,r)=>s+r.slice(4).reduce((a,b)=>a+b,0)-r[6]-r[7],0);
+  u.prev = { rows, ignoradas: ign, meses, total };
+  u.modo = 'meses';
+}
+
+async function aplicarGen(id){
+  const u = S.up[id]; const p = u.prev;
+  const mesDe = id === 'desp' ? (r => r[7] || String(r[1]).slice(0,7)) : (r => r[0]);
+  let rows;
+  if (u.modo === 'tudo') rows = p.rows.slice();
+  else if (u.modo === 'add') rows = S[id].concat(p.rows);
+  else { const ms = new Set(p.meses); rows = S[id].filter(r => !ms.has(mesDe(r))).concat(p.rows); }
+  const modoTxt = {meses:'substituiu os meses', add:'acrescentou', tudo:'substituiu tudo'}[u.modo];
+  try { await saveDataset(id, rows, `${u.nome}: ${p.rows.length} linhas (${modoTxt}: ${p.meses.map(mesLabel).join(', ')})`); S.up[id] = null; toast(`Importado: ${p.rows.length} linhas`); } catch(e) { writeErr(e); }
+  render();
+}
+
+// ---------------- modelos e exportação ----------------
+async function salvarArquivo(nome, aoa, sheetName){
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), sheetName || 'Dados');
+  XLSX.writeFile(wb, nome);
+}
+function modelo(m){
+  if (m === 'bd') return salvarArquivo('modelo_atualizacao_base.xlsx', [['cod_venda','vlr_contrato','vlr_quitado','vlr_cancelado_calculado'],[570618,46973,11994,34979]], 'Atualização');
+  if (m === 'desp') return salvarArquivo('modelo_despesas_gerais.xlsx', [DESP_H], 'DESPESAS GERAIS');
+  if (m === 'com') return salvarArquivo('modelo_comissoes.xlsx', [COM_H], 'COMISSÕES');
+}
+function exportar(p){
+  const r = S.res[p]; const cols = colunas(r);
+  const aoa = [[`DRE GERENCIAL - ${PNOME[p].toUpperCase()}`], [''].concat(cols.map(c=>c.label))];
+  for (const l of r.linhas) aoa.push(['  '.repeat(l.nivel) + l.label].concat(cols.map(c => { const v = valor(r, l.key, c); return Math.round(v * (l.t==='p'?10000:100)) / (l.t==='p'?10000:100); })));
+  return salvarArquivo(`DRE_${PNOME[p]}_${S.ano}.xlsx`, aoa, PNOME[p]);
+}
+
+// ---------------- modal ----------------
+function confirmar(titulo, texto, botao, onOk, onCancel){
+  $('#dre-modal-root').innerHTML = `<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt" style="margin:0">${esc(titulo)}</h3><p style="margin:0">${esc(texto)}</p><div class="row" style="justify-content:flex-end"><button class="btn" id="m-no">Cancelar</button><button class="btn pri" id="m-ok">${esc(botao)}</button></div></div></div>`;
+  $('#m-no').onclick = () => { $('#dre-modal-root').innerHTML=''; onCancel && onCancel(); };
+  $('#m-ok').onclick = () => { $('#dre-modal-root').innerHTML=''; onOk(); };
+  $('#m-ok').focus();
+}
+function editarCelula(p, key, mes){
+  const r = S.res[p]; const l = r.linhas.find(x=>x.key===key);
+  const atual = r.porMes[mes][key];
+  const existentes = S.manual.filter(e => e.prod===p && e.key===key && e.mes===mes);
+  $('#dre-modal-root').innerHTML = `<div class="modal-bg"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <h3 id="mt" style="margin:0">${esc(l.label)} · ${PNOME[p]} · ${mesLabel(mes)}</h3>
+    <p class="muted small" style="margin:0">${existentes.length ? 'Este mês já tem ajuste manual. O valor abaixo substitui o cálculo da linha.' : `Valor calculado hoje: <b>${money2(atual)}</b>. Um ajuste substitui o cálculo desta linha neste mês.`}</p>
+    <label class="f">Valor (R$)<input id="m-val" inputmode="decimal" value="${existentes.length ? esc(fmt2.format(existentes.reduce((s,e)=>s+e.valor,0))) : ''}" placeholder="${esc(fmt2.format(atual))}"></label>
+    <label class="f">Observação<input id="m-obs" value="${esc(existentes[0]?.obs||'')}"></label>
+    <div class="row">${existentes.length?'<button class="btn danger" id="m-del">Remover ajuste</button>':''}<span class="spacer"></span><button class="btn" id="m-no">Cancelar</button><button class="btn pri" id="m-ok">Salvar ajuste</button></div></div></div>`;
+  const close = () => $('#dre-modal-root').innerHTML = '';
+  $('#m-val').focus();
+  $('#m-no').onclick = close;
+  if (existentes.length) $('#m-del').onclick = async () => { S.manual = S.manual.filter(e => !(e.prod===p && e.key===key && e.mes===mes)); S.dirty = true; close(); render(); try { await saveManual(); toast('Ajuste removido'); } catch(e){ writeErr(e); } };
+  $('#m-ok').onclick = async () => {
+    const txt = $('#m-val').value.trim(); if (!txt) { $('#m-val').focus(); return; }
+    const v = parseNum(txt);
+    S.manual = S.manual.filter(e => !(e.prod===p && e.key===key && e.mes===mes)).concat([{ prod:p, key, mes, valor: v, obs: $('#m-obs').value.trim() }]);
+    S.dirty = true; close(); render();
+    try { await saveManual(); toast('Ajuste salvo'); } catch(e){ writeErr(e); }
+  };
+  $('#dre-modal-root').querySelector('.modal').addEventListener('keydown', e => { if (e.key==='Escape') close(); if (e.key==='Enter') $('#m-ok').click(); });
+}
+
+// ---------------- eventos ----------------
+document.addEventListener('click', async ev => {
+  if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
+  const cp = ev.target.closest('.cac-row');
+  if (cp) { const [p, per] = cp.dataset.cac.split('|'); S.cacSel = { p, per }; render(); const el = document.querySelector(`.cac-row[data-cac="${p}|${per}"]`); if (el) el.focus({ preventScroll: true }); return; }
+  const t = ev.target.closest('button,td.cell'); if (!t) return;
+  if (t.dataset.dtab) { S.tab = t.dataset.dtab; render(); window.scrollTo(0,0); return; }
+  if (t.dataset.tabGo) { S.tab = t.dataset.tabGo; render(); window.scrollTo(0,0); return; }
+  if (t.dataset.ano) { S.ano = t.dataset.ano; render(); return; }
+  if (t.dataset.tg) { const e = S.expand[t.dataset.p] = S.expand[t.dataset.p] || {}; e[t.dataset.tg] = !e[t.dataset.tg]; render(); return; }
+  if (t.dataset.cell) { const [p,k,m] = t.dataset.cell.split('|'); editarCelula(p,k,m); return; }
+  if (t.dataset.cacmodo) { S.cacModo = t.dataset.cacmodo; render(); return; }
+  if ('ajf' in t.dataset) { S.ajProd = t.dataset.ajf; render(); return; }
+  const a = t.dataset.act; if (!a) return;
+  if (a === 'expandir') { const p = t.dataset.p; const r = S.res[p]; const any = Object.values(S.expand[p]||{}).some(Boolean); const e = {}; if (!any) { let pai=null; for (const l of r.linhas) { if (l.nivel<=1) pai=l.key; else e[pai]=true; } } S.expand[p]=e; render(); }
+  else if (a === 'recarregar') { await carregarTudo(); }
+  else if (a === 'caclimpa') { S.cacDe = S.cacAte = ''; render(); }
+  else if (a === 'exportar') exportar(t.dataset.p);
+  else if (a === 'modelo') modelo(t.dataset.m);
+  else if (a === 'bdprev') { S.bdPage--; render(); }
+  else if (a === 'bdnext') { S.bdPage++; render(); }
+  else if (a === 'upcancel') { S.up[t.dataset.id] = null; render(); }
+  else if (a === 'bdaplicar') { t.disabled = true; setStatus('Aplicando…'); await aplicarBD(); }
+  else if (a === 'genaplicar') { const id = t.dataset.id; const u = S.up[id]; const txt = {meses:'Os meses do arquivo serão substituídos.', add:'As linhas serão acrescentadas às atuais.', tudo:'Todas as linhas atuais serão apagadas e trocadas pelas do arquivo.'}[u.modo];
+    confirmar('Importar arquivo?', `${u.nome}: ${u.prev.rows.length} linhas. ${txt}`, 'Importar', () => aplicarGen(id)); }
+  else if (a === 'despdel') { const i = +t.dataset.i; const d = S.desp[i]; confirmar('Excluir lançamento?', `${d[2]} · ${money2(d[3])} · ${String(d[1]).split('-').reverse().join('/')}`, 'Excluir', async () => { const rows = S.desp.filter((_,j)=>j!==i); try { await saveDataset('desp', rows, `Lançamento excluído: ${d[2]} ${money2(d[3])}`); toast('Lançamento excluído'); } catch(e){ writeErr(e); } render(); }); }
+  else if (a === 'comdelmes') { const m = t.dataset.m; const n = S.com.filter(r=>r[0]===m).length; confirmar(`Excluir ${mesLabel(m)}?`, `${n} linhas de comissão desse mês comercial serão apagadas.`, 'Excluir mês', async () => { try { await saveDataset('com', S.com.filter(r=>r[0]!==m), `Mês ${m} excluído`); toast('Mês excluído'); } catch(e){ writeErr(e); } S.comMes=''; render(); }); }
+  else if (a === 'ajadd') {
+    const txt = $('#aj-valor').value.trim(); if (!txt) { $('#aj-valor').focus(); return; }
+    const e = { prod: $('#aj-prod').value, key: $('#aj-key').value, mes: $('#aj-mes').value, valor: parseNum(txt), obs: $('#aj-obs').value.trim() };
+    S.manual = S.manual.filter(x => !(x.prod===e.prod && x.key===e.key && x.mes===e.mes)).concat([e]); S.dirty = true; render();
+    try { await saveManual(); toast('Ajuste salvo'); } catch(err){ writeErr(err); }
+  }
+  else if (a === 'ajdel') { const i = +t.dataset.i; S.manual = S.manual.filter((_,j)=>j!==i); S.dirty = true; render(); try { await saveManual(); toast('Ajuste excluído'); } catch(e){ writeErr(e); } }
+  else if (a === 'paramsalvar') {
+    const np = {}; document.querySelectorAll('[data-param]').forEach(inp => { const [p,k] = inp.dataset.param.split('|'); (np[p]=np[p]||{})[k] = parseNum(inp.value); });
+    S.params = np; S.dirty = true; try { await saveParams(); toast('Parâmetros salvos'); } catch(e){ writeErr(e); } render();
+  }
+  else if (a === 'regraadd') { S.regrasEdit = lerRegras(); S.regrasEdit.push({ prod:'INSIDER', secao:'gerais', parceiro:'', empresa:'', pct:1, de:'', ate:'' }); render(); }
+  else if (a === 'regradel') { S.regrasEdit = lerRegras(); S.regrasEdit.splice(+t.dataset.i, 1); render(); }
+  else if (a === 'regrapadrao') { S.regrasEdit = JSON.parse(JSON.stringify(DRE.REGRAS_PADRAO)); render(); toast('Regras da planilha carregadas. Clique em Salvar regras para aplicar.'); }
+  else if (a === 'regrasalvar') { const rg = lerRegras().filter(r => r.parceiro.trim()); S.regras = rg; S.regrasEdit = null; S.dirty = true; try { await saveParams(); toast('Regras salvas'); } catch(e){ writeErr(e); } render(); }
+});
+function lerRegras(){
+  const base = JSON.parse(JSON.stringify(S.regrasEdit || regras()));
+  document.querySelectorAll('[data-rg]').forEach(inp => {
+    const [i,k] = inp.dataset.rg.split('|'); const r = base[+i]; if (!r) return;
+    let v = inp.value.trim();
+    if (k === 'pct') v = parseNum(v.replace('%','')) / 100;
+    if (k === 'de' || k === 'ate') { const d = parseDate(v); v = d ? d.slice(0,7) : ''; }
+    r[k] = v;
+  });
+  return base;
+}
+document.addEventListener('change', ev => {
+  if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
+  const t = ev.target;
+  if (t.dataset.up && t.files[0]) { const f = t.files[0]; t.value=''; if (t.dataset.up === 'json') importarJSON(f); else onFile(t.dataset.up, f); return; }
+  if (t.id === 'bdprod') { S.bdProd = t.value; S.bdPage = 0; render(); }
+  else if (t.id === 'bdmes') { S.bdMes = t.value; S.bdPage = 0; render(); }
+  else if (t.id === 'cac-de' || t.id === 'cac-ate') { if (t.id === 'cac-de') S.cacDe = t.value; else S.cacAte = t.value; if (S.cacDe && !S.cacAte) S.cacAte = S.cacDe; if (S.cacAte && !S.cacDe) S.cacDe = S.cacAte; if (S.cacDe && S.cacAte) S.cacSel = { p: (S.cacSel||{}).p || 'INSIDER', per: 'custom' }; render(); }
+  else if (t.id === 'despmes') { S.despMes = t.value; render(); }
+  else if (t.id === 'commes') { S.comMes = t.value; render(); }
+  else if (t.id === 'aj-prod') { S.ajNovoProd = t.value; render(); }
+  else if (t.id === 'bd-incluir') { S.up.bd.incluir = t.checked; render(); }
+  else if (t.id === 'bd-status') { S.up.bd.status = t.checked; render(); }
+  else if (t.name && t.name.startsWith('modo-')) { S.up[t.name.slice(5)].modo = t.value; }
+  else if (t.dataset.rg) { S.regrasEdit = lerRegras(); }
+});
+let qT; document.addEventListener('input', ev => {
+  if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
+  if (ev.target.id === 'bdq') { clearTimeout(qT); const v = ev.target.value; qT = setTimeout(() => { S.bdQ = v; S.bdPage = 0; render(); const el = $('#bdq'); if (el) { el.focus(); el.setSelectionRange(v.length, v.length); } }, 250); }
+});
+['dragover','dragleave','drop'].forEach(type => document.addEventListener(type, ev => {
+  const z = ev.target.closest && ev.target.closest('.drop'); if (!z) return;
+  ev.preventDefault();
+  if (type === 'dragover') z.classList.add('over');
+  else z.classList.remove('over');
+  if (type === 'drop' && ev.dataTransfer.files[0]) { const id = z.querySelector('input').dataset.up; if (id === 'json') importarJSON(ev.dataTransfer.files[0]); else onFile(id, ev.dataTransfer.files[0]); }
+}));
+
+document.addEventListener('keydown', ev => {
+  if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
+  // linhas do CAC são botões: Enter/Espaço já disparam o clique
+});
+document.addEventListener('mousemove', ev => {
+  if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
+  const tip = document.getElementById('cac-tip'); if (!tip) return;
+  const g = ev.target.closest && ev.target.closest('#cac-chart .bar');
+  if (!g) { tip.hidden = true; return; }
+  const d = S._tip[+g.dataset.tip]; const box = document.getElementById('cac-chart').getBoundingClientRect();
+  tip.innerHTML = `<b>${mesLabel(d.m)}</b><br>CAC Bruto ${fmtCac(d.x.cac_bruto)}<br>CAC Recebido ${fmtCac(d.x.cac_liq)}<br><span class="muted">Custo ${money2(d.x.custo)}<br>Contrato ${money2(d.x.contrato)} · Recebido ${money2(d.x.recebido)}</span>`;
+  tip.hidden = false;
+  let x = ev.clientX - box.left + 12; if (x + tip.offsetWidth > box.width) x = ev.clientX - box.left - tip.offsetWidth - 12;
+  tip.style.left = Math.max(0, x) + 'px'; tip.style.top = Math.max(0, ev.clientY - box.top - tip.offsetHeight - 8) + 'px';
+});
+
+window.dreComercial = { abrir: boot, sair(){ S.booted = false; S.got = {}; S.bd = []; S.com = []; S.desp = []; S.manual = []; S.params = {}; S.regras = null; S.meta = {}; S.dirty = true; } };
+})();
 </script>
 </body>
 </html>
