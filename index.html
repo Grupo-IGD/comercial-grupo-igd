@@ -4572,6 +4572,7 @@ function viewBD(){
   if (S.bdMes) f = f.filter(r => String(r[11]).startsWith(S.bdMes));
   if (S.bdDre) f = f.filter(r => S.bdDre === 'sim' ? naDre(r) : !naDre(r));
   if (q) f = f.filter(r => norm(r[0]).includes(q) || norm(r[1]).includes(q) || norm(r[15]).includes(q) || norm(r[2]).includes(q) || norm(r[3]).includes(q) || norm(r[4]).includes(q) || norm(r[14]).includes(q));
+  S._bdFiltrado = f;
   const per = 100, pages = Math.max(1, Math.ceil(f.length / per)); if (S.bdPage >= pages) S.bdPage = 0;
   const page = f.slice(S.bdPage*per, S.bdPage*per + per);
   const tot = f.reduce((a,r)=>{a.c+=+r[5]||0;a.q+=+r[6]||0;a.x+=+r[9]||0;return a},{c:0,q:0,x:0});
@@ -4598,7 +4599,7 @@ function viewBD(){
       <select id="bddre" aria-label="Considerada na DRE"><option value="">Todas as vendas</option><option value="sim" ${S.bdDre==='sim'?'selected':''}>Consideradas na DRE</option><option value="nao" ${S.bdDre==='nao'?'selected':''}>Fora da DRE</option></select>
       <select id="bdmes"><option value="">Todos os meses</option>${mesesB.map(m=>`<option value="${m}" ${S.bdMes===m?'selected':''}>${mesLabel(m)}</option>`).join('')}</select>
     </div>
-    <div class="muted small">${fmt0.format(f.length)} vendas · contrato ${money2(tot.c)} · quitado ${money2(tot.q)} · cancelado ${money2(tot.x)}</div>
+    <div class="row"><div class="muted small">${fmt0.format(f.length)} vendas · contrato ${money2(tot.c)} · quitado ${money2(tot.q)} · cancelado ${money2(tot.x)}</div><span class="spacer"></span><button class="btn" data-act="bdexport" ${f.length?'':'disabled'}>Exportar (.xlsx)</button></div>
     <div class="tbl-wrap"><table><thead><tr><th>Cód. venda</th><th style="text-align:left">des_email</th><th style="text-align:left">nme_plano</th><th style="text-align:left">cod_oferta</th><th style="text-align:left">nme_oferta</th><th style="text-align:left">Data</th><th style="text-align:left">Produto</th><th style="text-align:left">Status</th><th style="text-align:left">cod_vendedor</th><th style="text-align:left">Vendedor</th><th style="text-align:left">Time</th><th style="text-align:left">DRE</th><th>Vlr contrato</th><th>Vlr quitado</th><th>Vlr receber</th><th>Vlr cancelado</th></tr></thead><tbody>
     ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[14])}</td><td>${esc(r[15])}</td><td>${esc(timeDe(r)) || '<span class="muted">sem cadastro</span>'}</td><td>${naDre(r) ? '<span class="pill">Sim</span>' : `<span class="pill warn">${contratoZerado(r) ? 'Fora · contrato zerado' : 'Fora · time'}</span>`}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="17" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
     </tbody></table></div>
@@ -4746,6 +4747,21 @@ async function aplicarVend(){
   const u = S.up.vend;
   try { await saveDataset('vend', u.prev.rows, `${u.nome}: base de vendedores substituída (${u.prev.rows.length} vendedores)`); S.up.vend = null; S.dirty = true; toast('Base de vendedores atualizada'); } catch(e) { writeErr(e); }
   render();
+}
+function exportarBD(){
+  const rows = S._bdFiltrado || S.bd;
+  const head = ['cod_venda','des_email','nme_plano','cod_oferta','nme_oferta','vlr_contrato','vlr_quitado','vlr_receber','vlr_cancelado_calculado','nme_evento_lancamento','dta_venda_utc_ajustada','nme_produto_agrupado','nme_status_venda','cod_vendedor','nme_vendedor','nme_condicao_pagamento','Time (base de vendedores)','Considerada na DRE'];
+  // data como número serial do Excel (evita deslocamento de fuso)
+  const dt = v => { const m = String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (Date.UTC(+m[1], +m[2]-1, +m[3]) - Date.UTC(1899, 11, 30)) / 86400000 : (v || ''); };
+  const aoa = [head].concat(rows.map(r => [r[0], r[1], r[2], r[3], r[4], +r[5]||0, +r[6]||0, +r[7]||0, +r[9]||0, r[10], dt(r[11]), r[12], r[13], r[14], r[15], r[16], timeDe(r), naDre(r) ? 'Sim' : (contratoZerado(r) ? 'Não - contrato zerado' : 'Não - time')]));
+  const filtros = [S.bdProd, S.bdMes, S.bdDre === 'sim' ? 'na-dre' : S.bdDre === 'nao' ? 'fora-dre' : ''].filter(Boolean).join('_');
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = head.map((h, i) => ({ wch: [0,13,14,17].includes(i) ? 12 : (i >= 5 && i <= 8 ? 14 : 22) }));
+  for (let i = 1; i < aoa.length; i++) { for (const c of [5,6,7,8]) { const cell = ws[XLSX.utils.encode_cell({ r: i, c })]; if (cell) cell.z = '#,##0.00'; } const d = ws[XLSX.utils.encode_cell({ r: i, c: 10 })]; if (d && d.t === 'n') d.z = 'dd/mm/yyyy'; }
+  XLSX.utils.book_append_sheet(wb, ws, 'Base de vendas');
+  XLSX.writeFile(wb, 'base_vendas' + (filtros ? '_' + filtros : '') + '.xlsx');
+  toast(`Exportadas ${fmt0.format(rows.length)} vendas`);
 }
 function exportarVend(){
   const lista = listaVendedores();
@@ -5139,6 +5155,7 @@ document.addEventListener('click', async ev => {
   else if (a === 'modelo') modelo(t.dataset.m);
   else if (a === 'vendaplicar') { t.disabled = true; await aplicarVend(); }
   else if (a === 'vendexport') exportarVend();
+  else if (a === 'bdexport') exportarBD();
   else if (a === 'timessalvar') { const sel = [...document.querySelectorAll('[data-time]:checked')].map(x => x.dataset.time); if (!sel.length) { toast('Escolha pelo menos um time.'); return; } S.times = sel; S.dirty = true; render(); try { await saveParams(); toast('Times salvos: ' + sel.join(', ')); } catch(e){ writeErr(e); } }
   else if (a === 'bdprev') { S.bdPage--; render(); }
   else if (a === 'bdnext') { S.bdPage++; render(); }
