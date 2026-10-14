@@ -694,7 +694,7 @@
 </div>
 
 <div id="modRec">
-<h1>Fluxo de Recebimento <span id="tituloLinha">FL</span></h1>
+<h1>Recebimento Caixa <span id="tituloLinha">FL</span></h1>
 
 <div class="line-tabs" id="lineTabs">
   <button class="line-btn active" data-line="fl">FL</button>
@@ -3325,7 +3325,7 @@ function aplicarLinha() {
   document.getElementById('comissaoAgrup').textContent = 'por Semana Comercial';
   document.getElementById('comissaoOutrasOrigens').style.display = linhaAtual === 'ing' ? 'flex' : 'none';
   document.getElementById('notaComissaoFL').style.display = linhaAtual === 'fl' ? 'block' : 'none';
-  document.title = 'Fluxo de Recebimento ' + nome;
+  document.title = 'Recebimento Caixa ' + nome;
   document.querySelectorAll('.line-btn').forEach(b => b.classList.toggle('active', b.dataset.line === linhaAtual));
   [uploadStatus, uploadRecStatus, uploadProntoProjStatus, document.getElementById('uploadHtStatus')].forEach(el => { el.textContent = ''; });
 
@@ -3781,7 +3781,7 @@ document.querySelectorAll('.mod-btn').forEach(btn => btn.addEventListener('click
   document.querySelectorAll('.mod-btn').forEach(b => b.classList.toggle('active', b === btn));
   document.getElementById('modRec').style.display = mod === 'rec' ? '' : 'none';
   document.getElementById('dreApp').hidden = mod !== 'dre';
-  document.title = mod === 'dre' ? 'DRE Comercial' : ('Fluxo de Recebimento ' + LINHAS[linhaAtual].nome);
+  document.title = mod === 'dre' ? 'DRE Comercial' : ('Recebimento Caixa ' + LINHAS[linhaAtual].nome);
   if (mod === 'dre') window.dreComercial.abrir();
 }));
 document.getElementById('logoutBtn').addEventListener('click', () => {
