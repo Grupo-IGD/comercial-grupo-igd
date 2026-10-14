@@ -4179,7 +4179,7 @@ async function carregarTudo(){
   S.got = {}; S.erroCarga = ''; render(); setStatus('Carregando…');
   try {
     const [pr, mn, lg] = await Promise.all([sbGet(PFX+'params'), sbGet(PFX+'manual'), sbGet(PFX+'log')]);
-    S.params = (pr && pr.params) || {}; S.regras = pr && Array.isArray(pr.regras) ? pr.regras : null; S.ate = (pr && pr.ate) || ''; S.times = pr && Array.isArray(pr.times) ? pr.times : null; S.got.params = true;
+    S.params = (pr && pr.params) || {}; S.regras = pr && Array.isArray(pr.regras) ? pr.regras : null; S.ate = (pr && pr.ate) || ''; S.times = pr && Array.isArray(pr.times) ? pr.times : null; S.vig = pr && Array.isArray(pr.vig) ? pr.vig : null; S.got.params = true;
     S.manual = (mn && Array.isArray(mn.itens)) ? mn.itens : []; S.got.manual = true;
     S.log = Array.isArray(lg) ? lg : [];
     await Promise.all(DATASETS.map(async name => {
@@ -4229,7 +4229,7 @@ async function saveDataset(name, rows, resumoLog){
   if (resumoLog) await registrarLog(name, resumoLog);
   setStatus('Salvo');
 }
-async function saveParams(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'params', { params: S.params, regras: S.regras || DRE.REGRAS_PADRAO, ate: S.ate || '', times: S.times || null }); }
+async function saveParams(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'params', { params: S.params, regras: S.regras || DRE.REGRAS_PADRAO, ate: S.ate || '', times: S.times || null, vig: Array.isArray(S.vig) ? S.vig : null }); }
 async function saveManual(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'manual', { itens: S.manual }); }
 
 function writeErr(e){
@@ -4274,10 +4274,15 @@ function mapaVendedores(){
 function timeDe(r){ const v = S._mapa && S._mapa.get(codKey(r[14])); return v ? v.time : ''; }
 // vendas com Vlr contrato zerado não entram na DRE
 function contratoZerado(r){ return Math.abs(+r[5] || 0) < 0.005; }
-function naDre(r){ return !contratoZerado(r) && S._timesN.has(norm(timeDe(r))); }
+// período por vendedor: vendas fora do intervalo (data da venda) não entram na DRE
+const VIG_PADRAO = [{ cod: 'V055', de: '2025-10-28', ate: '' }];
+function vigencias(){ return Array.isArray(S.vig) ? S.vig : VIG_PADRAO; }
+function foraVigencia(r){ const v = S._vig && S._vig.get(codKey(r[14])); if (!v) return false; const d = String(r[11]).slice(0,10); return !!((v.de && d < v.de) || (v.ate && d > v.ate)); }
+function naDre(r){ return !contratoZerado(r) && !foraVigencia(r) && S._timesN.has(norm(timeDe(r))); }
+function motivoFora(r){ return contratoZerado(r) ? 'contrato zerado' : foraVigencia(r) ? 'fora do período do vendedor' : 'time'; }
 function recompute(){
   if (!S.dirty) return S.res;
-  S._mapa = mapaVendedores(); S._timesN = new Set(timesSel().map(norm));
+  S._mapa = mapaVendedores(); S._timesN = new Set(timesSel().map(norm)); S._vig = new Map(vigencias().filter(v => v.cod).map(v => [codKey(v.cod), v]));
   const bdDre = S.bd.filter(naDre); S.bdDreN = bdDre.length;
   const base = { bd: bdDre, com: S.com, desp: S.desp };
   const idx = DRE.indexar(base);
@@ -4601,7 +4606,7 @@ function viewBD(){
     </div>
     <div class="row"><div class="muted small">${fmt0.format(f.length)} vendas · contrato ${money2(tot.c)} · quitado ${money2(tot.q)} · cancelado ${money2(tot.x)}</div><span class="spacer"></span><button class="btn" data-act="bdexport" ${f.length?'':'disabled'}>Exportar (.xlsx)</button></div>
     <div class="tbl-wrap"><table><thead><tr><th>Cód. venda</th><th style="text-align:left">des_email</th><th style="text-align:left">nme_plano</th><th style="text-align:left">cod_oferta</th><th style="text-align:left">nme_oferta</th><th style="text-align:left">Data</th><th style="text-align:left">Produto</th><th style="text-align:left">Status</th><th style="text-align:left">cod_vendedor</th><th style="text-align:left">Vendedor</th><th style="text-align:left">Time</th><th style="text-align:left">DRE</th><th>Vlr contrato</th><th>Vlr quitado</th><th>Vlr receber</th><th>Vlr cancelado</th></tr></thead><tbody>
-    ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[14])}</td><td>${esc(r[15])}</td><td>${esc(timeDe(r)) || '<span class="muted">sem cadastro</span>'}</td><td>${naDre(r) ? '<span class="pill">Sim</span>' : `<span class="pill warn">${contratoZerado(r) ? 'Fora · contrato zerado' : 'Fora · time'}</span>`}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="17" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
+    ${page.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td>${esc(String(r[11]).split('-').reverse().join('/'))}</td><td>${esc(r[12])}</td><td>${esc(r[13])}</td><td>${esc(r[14])}</td><td>${esc(r[15])}</td><td>${esc(timeDe(r)) || '<span class="muted">sem cadastro</span>'}</td><td>${naDre(r) ? '<span class="pill">Sim</span>' : `<span class="pill warn">Fora · ${motivoFora(r)}</span>`}</td><td class="num">${money2(r[5])}</td><td class="num">${money2(r[6])}</td><td class="num">${money2(r[7])}</td><td class="num">${money2(r[9])}</td></tr>`).join('') || `<tr><td colspan="17" class="empty">Nenhuma venda encontrada com esses filtros.</td></tr>`}
     </tbody></table></div>
     <div class="pager"><button class="btn" data-act="bdprev" ${S.bdPage===0?'disabled':''}>Anterior</button><span>Página ${S.bdPage+1} de ${pages}</span><button class="btn" data-act="bdnext" ${S.bdPage>=pages-1?'disabled':''}>Próxima</button></div>
   </div></div>`;
@@ -4706,6 +4711,7 @@ function viewVend(){
     <div class="row">${times.map(t => `<label class="row small" style="gap:6px"><input type="checkbox" data-time="${esc(t)}" ${sel.has(norm(t))?'checked':''} ${S.canWrite?'':'disabled'}> ${esc(t)}</label>`).join('')}</div>
     ${S.canWrite ? '<div class="row"><button class="btn pri" data-act="timessalvar">Salvar times</button></div>' : ''}
   </div>
+  ${viewVigencias()}
   ${S.canWrite ? `<div class="panel stack" style="gap:12px">
     <div class="row"><h3 style="margin:0">Atualizar base de vendedores</h3><span class="spacer"></span><button class="btn" data-act="vendexport">Baixar base atual (.xlsx)</button></div>
     <p class="muted small" style="margin:0">O arquivo precisa ter as colunas <b>cod_vendedor</b> e <b>Head</b> (o head é o time considerado; sem a coluna Head, usa Time). O nome do vendedor é opcional. A base enviada substitui a anterior inteira. Dica: baixe a base atual, ajuste no Excel e envie de volta.</p>
@@ -4721,6 +4727,24 @@ function viewVend(){
     ${f.map(x => `<tr><td>${esc(x.cod)}</td><td>${esc(x.nome)}</td><td>${esc(x.time) || '<span class="muted">—</span>'}</td><td class="num">${fmt0.format(cont.get(x.cod)||0)}</td><td>${sel.has(norm(x.time)) ? '<span class="pill">Considerado</span>' : '<span class="pill warn">Fora</span>'}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">Nenhum vendedor.</td></tr>'}
     </tbody></table></div></div>
   </div>`;
+}
+function viewVigencias(){
+  const lista = S.vigEdit || vigencias();
+  const cont = c => S.bd.filter(r => codKey(r[14]) === codKey(c) && foraVigencia(r)).length;
+  const dis = S.canWrite ? '' : 'disabled';
+  return `<div class="panel stack" style="gap:10px">
+    <div class="row"><h3 style="margin:0">Período de vendas por vendedor</h3><span class="spacer"></span>${S.canWrite ? '<button class="btn" data-act="vigadd">Adicionar vendedor</button><button class="btn pri" data-act="vigsalvar">Salvar períodos</button>' : ''}</div>
+    <p class="muted small" style="margin:0">Para estes vendedores, só entram na DRE as vendas com data dentro do período (pela data da venda). Deixe "até" vazio para não ter data final.</p>
+    <div class="tbl-wrap"><table><thead><tr><th style="text-align:left">cod_vendedor</th><th style="text-align:left">Vendedor</th><th style="text-align:left">A partir de</th><th style="text-align:left">Até</th><th>Vendas fora do período</th>${S.canWrite?'<th></th>':''}</tr></thead><tbody>
+    ${lista.map((v,i) => `<tr><td style="width:130px"><input data-vig="${i}|cod" value="${esc(v.cod)}" placeholder="V000" ${dis}></td><td>${esc((S._mapa.get(codKey(v.cod))||{}).nome || '')}</td>
+      <td style="width:160px"><input type="date" data-vig="${i}|de" value="${esc(v.de)}" ${dis}></td><td style="width:160px"><input type="date" data-vig="${i}|ate" value="${esc(v.ate)}" ${dis}></td>
+      <td class="num">${fmt0.format(cont(v.cod))}</td>${S.canWrite?`<td><button class="btn danger" data-act="vigdel" data-i="${i}">Remover</button></td>`:''}</tr>`).join('') || `<tr><td colspan="6" class="empty">Nenhum período cadastrado.</td></tr>`}
+    </tbody></table></div></div>`;
+}
+function lerVig(){
+  const base = JSON.parse(JSON.stringify(S.vigEdit || vigencias()));
+  document.querySelectorAll('[data-vig]').forEach(inp => { const [i,k] = inp.dataset.vig.split('|'); if (base[+i]) base[+i][k] = k === 'cod' ? codKey(inp.value).toUpperCase() : inp.value; });
+  return base;
 }
 function prepVend(sheets){
   const u = S.up.vend;
@@ -4740,7 +4764,7 @@ function prepVend(sheets){
   const cont = new Map(); for (const r of S.bd) { const k = codKey(r[14]); cont.set(k, (cont.get(k)||0) + 1); }
   const pt = new Map(); for (const v of rows) { const o = pt.get(v[2]) || [v[2], 0, 0]; o[1]++; o[2] += cont.get(v[0]) || 0; pt.set(v[2], o); }
   let nDre = 0, semCad = 0;
-  for (const r of S.bd) { const t = mapa.get(codKey(r[14])); if (t == null) semCad++; else if (!contratoZerado(r) && S._timesN.has(norm(t))) nDre++; }
+  for (const r of S.bd) { const t = mapa.get(codKey(r[14])); if (t == null) semCad++; else if (!contratoZerado(r) && !foraVigencia(r) && S._timesN.has(norm(t))) nDre++; }
   u.prev = { colTime: c.sh.aoa[c.i][iT], rows, dup, semTime: rows.filter(v => !v[2]).length, porTime: [...pt.values()].sort((a,b) => b[2]-a[2]), nDre, semCad };
 }
 async function aplicarVend(){
@@ -4753,7 +4777,7 @@ function exportarBD(){
   const head = ['cod_venda','des_email','nme_plano','cod_oferta','nme_oferta','vlr_contrato','vlr_quitado','vlr_receber','vlr_cancelado_calculado','nme_evento_lancamento','dta_venda_utc_ajustada','nme_produto_agrupado','nme_status_venda','cod_vendedor','nme_vendedor','nme_condicao_pagamento','Time (base de vendedores)','Considerada na DRE'];
   // data como número serial do Excel (evita deslocamento de fuso)
   const dt = v => { const m = String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? (Date.UTC(+m[1], +m[2]-1, +m[3]) - Date.UTC(1899, 11, 30)) / 86400000 : (v || ''); };
-  const aoa = [head].concat(rows.map(r => [r[0], r[1], r[2], r[3], r[4], +r[5]||0, +r[6]||0, +r[7]||0, +r[9]||0, r[10], dt(r[11]), r[12], r[13], r[14], r[15], r[16], timeDe(r), naDre(r) ? 'Sim' : (contratoZerado(r) ? 'Não - contrato zerado' : 'Não - time')]));
+  const aoa = [head].concat(rows.map(r => [r[0], r[1], r[2], r[3], r[4], +r[5]||0, +r[6]||0, +r[7]||0, +r[9]||0, r[10], dt(r[11]), r[12], r[13], r[14], r[15], r[16], timeDe(r), naDre(r) ? 'Sim' : 'Não - ' + motivoFora(r)]));
   const filtros = [S.bdProd, S.bdMes, S.bdDre === 'sim' ? 'na-dre' : S.bdDre === 'nao' ? 'fora-dre' : ''].filter(Boolean).join('_');
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(aoa);
@@ -5155,6 +5179,9 @@ document.addEventListener('click', async ev => {
   else if (a === 'modelo') modelo(t.dataset.m);
   else if (a === 'vendaplicar') { t.disabled = true; await aplicarVend(); }
   else if (a === 'vendexport') exportarVend();
+  else if (a === 'vigadd') { S.vigEdit = lerVig(); S.vigEdit.push({ cod: '', de: '', ate: '' }); render(); }
+  else if (a === 'vigdel') { S.vigEdit = lerVig(); S.vigEdit.splice(+t.dataset.i, 1); render(); }
+  else if (a === 'vigsalvar') { const v = lerVig().filter(x => x.cod && (x.de || x.ate)); S.vig = v; S.vigEdit = null; S.dirty = true; render(); try { await saveParams(); toast('Períodos salvos'); } catch(e){ writeErr(e); } }
   else if (a === 'bdexport') exportarBD();
   else if (a === 'timessalvar') { const sel = [...document.querySelectorAll('[data-time]:checked')].map(x => x.dataset.time); if (!sel.length) { toast('Escolha pelo menos um time.'); return; } S.times = sel; S.dirty = true; render(); try { await saveParams(); toast('Times salvos: ' + sel.join(', ')); } catch(e){ writeErr(e); } }
   else if (a === 'bdprev') { S.bdPage--; render(); }
@@ -5208,6 +5235,7 @@ document.addEventListener('change', ev => {
   else if (t.id === 'bd-status') { S.up.bd.status = t.checked; render(); }
   else if (t.name && t.name.startsWith('modo-')) { S.up[t.name.slice(5)].modo = t.value; }
   else if (t.dataset.rg) { S.regrasEdit = lerRegras(); }
+  else if (t.dataset.vig) { S.vigEdit = lerVig(); }
 });
 let qT; document.addEventListener('input', ev => {
   if (!ev.target.closest || !ev.target.closest('#dreApp')) return;
