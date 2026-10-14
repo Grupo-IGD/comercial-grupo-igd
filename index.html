@@ -632,6 +632,8 @@
     <input id="loginPassword" type="password" style="width:100%; box-sizing:border-box; padding:9px 10px; margin:4px 0 6px; border:1px solid #c9c8c2; border-radius:6px; font-size:14px;">
     <p id="loginError" style="color:#b3261e; font-size:12.5px; min-height:16px; margin:4px 0 14px;"></p>
     <button id="loginBtn" style="width:100%; padding:10px; background:#ED7D31; color:#fff; border:none; border-radius:6px; font-weight:700; font-size:14px; cursor:pointer;">Entrar</button>
+    <button id="esqueciBtn" type="button" style="width:100%; margin-top:12px; padding:4px; background:none; border:none; color:#ED7D31; font-size:13px; font-weight:700; cursor:pointer; text-decoration:underline;">Esqueci minha senha / Primeiro acesso</button>
+    <p id="esqueciMsg" style="font-size:12.5px; color:#1e6b34; margin:8px 0 0; min-height:0;"></p>
   </div>
 </div>
 
@@ -1225,6 +1227,35 @@ async function onLoggedIn(user) {
 sb.auth.getSession().then(({ data }) => {
   if (data.session && data.session.user) onLoggedIn(data.session.user);
 });
+// link vencido ou já usado: o Supabase volta com #error=...; explica e oferece outro link
+(function linkComErro(){
+  const q = new URLSearchParams((location.hash || '').replace(/^#/, '') || location.search.replace(/^\?/, ''));
+  if (!q.get('error') && !q.get('error_code')) return;
+  history.replaceState(null, '', location.pathname);
+  document.getElementById('loginError').textContent =
+    'Este link expirou ou já foi usado. Digite seu e-mail e clique em "Esqueci minha senha / Primeiro acesso" para receber um novo.';
+})();
+
+// "Esqueci minha senha / Primeiro acesso": manda um link novo para o e-mail digitado
+document.getElementById('esqueciBtn').addEventListener('click', async () => {
+  const email = document.getElementById('loginEmail').value.trim();
+  const errEl = document.getElementById('loginError'), okEl = document.getElementById('esqueciMsg');
+  errEl.textContent = ''; okEl.textContent = '';
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { errEl.textContent = 'Digite seu e-mail no campo acima e clique de novo.'; return; }
+  const btn = document.getElementById('esqueciBtn');
+  btn.disabled = true;
+  try {
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (error) {
+      errEl.textContent = /rate limit|seconds/i.test(error.message)
+        ? 'Muitos envios em pouco tempo. Aguarde alguns minutos e tente de novo.'
+        : 'Não foi possível enviar: ' + error.message;
+    } else {
+      okEl.textContent = 'Se este e-mail tiver acesso ao painel, você vai receber um link para criar a sua senha. Confira também o spam.';
+    }
+  } finally { btn.disabled = false; }
+});
+
 // link de convite/recuperação: o Supabase cria a sessão a partir do link e avisa aqui
 sb.auth.onAuthStateChange((evento, sessao) => {
   if (evento === 'PASSWORD_RECOVERY' && sessao && sessao.user) {
