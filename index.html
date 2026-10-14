@@ -509,6 +509,8 @@
 #dreApp nav.tabs button{font:500 13px var(--f-ui);color:var(--muted);background:none;border:0;border-bottom:2px solid transparent;padding:9px 12px;white-space:nowrap;cursor:pointer}
 #dreApp nav.tabs button:hover{color:var(--ink)}
 #dreApp nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+#dreApp nav.tabs .ate-wrap{margin-left:auto;display:flex;align-items:center;gap:8px;padding:4px 0 4px 12px;white-space:nowrap}
+#dreApp nav.tabs .ate-wrap select{font-size:12.5px}
 #dreApp nav.tabs .sep{width:1px;background:var(--line);margin:8px 6px}
 #dreApp h2{font-family:var(--f-cond);font-weight:600;font-size:18px;margin:0}
 #dreApp h3{font-family:var(--f-cond);font-weight:600;font-size:15px;margin:0 0 8px}
@@ -4145,7 +4147,7 @@ async function carregarTudo(){
   S.got = {}; S.erroCarga = ''; render(); setStatus('Carregando…');
   try {
     const [pr, mn, lg] = await Promise.all([sbGet(PFX+'params'), sbGet(PFX+'manual'), sbGet(PFX+'log')]);
-    S.params = (pr && pr.params) || {}; S.regras = pr && Array.isArray(pr.regras) ? pr.regras : null; S.got.params = true;
+    S.params = (pr && pr.params) || {}; S.regras = pr && Array.isArray(pr.regras) ? pr.regras : null; S.ate = (pr && pr.ate) || ''; S.got.params = true;
     S.manual = (mn && Array.isArray(mn.itens)) ? mn.itens : []; S.got.manual = true;
     S.log = Array.isArray(lg) ? lg : [];
     await Promise.all(DATASETS.map(async name => {
@@ -4195,7 +4197,7 @@ async function saveDataset(name, rows, resumoLog){
   if (resumoLog) await registrarLog(name, resumoLog);
   setStatus('Salvo');
 }
-async function saveParams(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'params', { params: S.params, regras: S.regras || DRE.REGRAS_PADRAO }); }
+async function saveParams(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'params', { params: S.params, regras: S.regras || DRE.REGRAS_PADRAO, ate: S.ate || '' }); }
 async function saveManual(){ if (!S.canWrite) throw new Error('Somente administradores podem alterar os dados.'); await sbSet(PFX+'manual', { itens: S.manual }); }
 
 function writeErr(e){
@@ -4230,11 +4232,15 @@ function recompute(){
   if (!S.dirty) return S.res;
   const base = { bd: S.bd, com: S.com, desp: S.desp };
   const idx = DRE.indexar(base);
-  const meses = DRE.mesesDisponiveis(base, idx);
+  const todos = DRE.mesesDisponiveis(base, idx);
+  S.todosMeses = todos;
+  let meses = S.ate ? todos.filter(m => m <= S.ate) : todos;
+  if (!meses.length) meses = todos;
   const res = {};
   for (const p of PRODS) res[p] = DRE.calcular(p, base, { idx, meses, params: S.params, regras: regras(), manual: S.manual });
   S.res = res; S.dirty = false;
-  if (!S.ano) S.ano = res.INSIDER.anos[res.INSIDER.anos.length - 1];
+  if (!S.ano || (S.ano !== 'tudo' && !res.INSIDER.anos.includes(S.ano))) S.ano = res.INSIDER.anos[res.INSIDER.anos.length - 1];
+  if (S.cacDe && !meses.includes(S.cacDe)) S.cacDe = ''; if (S.cacAte && !meses.includes(S.cacAte)) S.cacAte = '';
   return res;
 }
 
@@ -4248,7 +4254,15 @@ function renderTabs(){
   const abas = S.canWrite ? TABS : TABS.filter(t => ABAS_VIS.includes(t[0]));
   if (!S.canWrite && !ABAS_VIS.includes(S.tab)) S.tab = 'resumo';
   $('#dre-tabs').innerHTML = abas.map(t => t[0]==='|' ? '<span class="sep"></span>' :
-    `<button role="tab" data-dtab="${t[0]}" aria-selected="${S.tab===t[0]}">${t[1]}</button>`).join('');
+    `<button role="tab" data-dtab="${t[0]}" aria-selected="${S.tab===t[0]}">${t[1]}</button>`).join('') + '<span class="ate-wrap" id="ate-wrap"></span>';
+}
+// "Dados até": corta todas as DREs, totais e CAC no mês escolhido (vale para todos que abrem o sistema)
+function renderAte(){
+  const el = $('#ate-wrap'); if (!el || !S.todosMeses) return;
+  const ult = S.todosMeses[S.todosMeses.length - 1];
+  if (!S.canWrite) { el.innerHTML = `<span class="small muted">Dados até <b>${mesLabel(S.ate || ult)}</b></span>`; return; }
+  el.innerHTML = `<label class="small muted" for="dre-ate">Dados até</label>
+    <select id="dre-ate"><option value="">Último mês com dados (${mesLabel(ult)})</option>${S.todosMeses.slice().reverse().map(m => `<option value="${m}" ${S.ate === m ? 'selected' : ''}>${mesLabel(m)}</option>`).join('')}</select>`;
 }
 function ready(){ return S.got.bd && S.got.com && S.got.desp && S.got.params && S.got.manual; }
 
@@ -4265,6 +4279,7 @@ function render(){
   }
   else setStatus(`Base: ${fmt0.format(S.bd.length)} vendas · atualizada ${S.meta.bd ? new Date(S.meta.bd.atualizado).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}) : '—'}`);
   recompute();
+  renderAte();
   const t = S.tab;
   if (t === 'resumo') m.innerHTML = viewResumo();
   else if (PRODS.includes(t)) m.innerHTML = viewDRE(t);
@@ -5016,6 +5031,7 @@ document.addEventListener('change', ev => {
   if (t.id === 'bdprod') { S.bdProd = t.value; S.bdPage = 0; render(); }
   else if (t.id === 'bdmes') { S.bdMes = t.value; S.bdPage = 0; render(); }
   else if (t.id === 'cac-de' || t.id === 'cac-ate') { if (t.id === 'cac-de') S.cacDe = t.value; else S.cacAte = t.value; if (S.cacDe && !S.cacAte) S.cacAte = S.cacDe; if (S.cacAte && !S.cacDe) S.cacDe = S.cacAte; if (S.cacDe && S.cacAte) S.cacSel = { p: (S.cacSel||{}).p || 'INSIDER', per: 'custom' }; render(); }
+  else if (t.id === 'dre-ate') { S.ate = t.value; S.dirty = true; render(); (async () => { try { await saveParams(); toast(S.ate ? 'DRE fechada até ' + mesLabel(S.ate) : 'DRE mostrando até o último mês com dados'); } catch(e){ writeErr(e); } })(); }
   else if (t.id === 'despmes') { S.despMes = t.value; render(); }
   else if (t.id === 'commes') { S.comMes = t.value; render(); }
   else if (t.id === 'aj-prod') { S.ajNovoProd = t.value; render(); }
